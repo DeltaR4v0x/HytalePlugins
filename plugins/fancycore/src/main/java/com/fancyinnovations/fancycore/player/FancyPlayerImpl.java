@@ -1,6 +1,7 @@
 package com.fancyinnovations.fancycore.player;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.awt.*;
 import java.util.UUID;
@@ -42,77 +43,94 @@ public class FancyPlayerImpl implements FancyPlayer {
         this.isDirty = false;
     }
 
-    public UUID getUuid() {
+    @Override
+    public UUID getUUID() {
         return uuid;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public String getNickname() {
         return nickname;
     }
 
+    @Override
     public void setNickname(String nickname) {
         this.nickname = nickname;
         this.isDirty = true;
     }
 
+    @Override
     public Color getChatColor() {
         return chatColor;
     }
 
+    @Override
     public void setChatColor(Color chatColor) {
         this.chatColor = chatColor;
         this.isDirty = true;
     }
 
+    @Override
     public double getBalance() {
         return balance;
     }
 
+    @Override
     public void setBalance(double balance) {
         this.balance = balance;
         this.isDirty = true;
     }
 
+    @Override
     public void addBalance(double amount) {
         this.balance += amount;
         this.isDirty = true;
     }
 
+    @Override
     public void removeBalance(double amount) {
         this.balance -= amount;
         this.isDirty = true;
     }
 
+    @Override
     public long getFirstLoginTime() {
         return firstLoginTime;
     }
 
+    @ApiStatus.Internal
     public void setFirstLoginTime(long firstLoginTime) {
         this.firstLoginTime = firstLoginTime;
     }
 
+    @Override
     public long getPlayTime() {
         return playTime;
     }
 
+    @ApiStatus.Internal
     public void setPlayTime(long playTime) {
         this.playTime = playTime;
         this.isDirty = true;
     }
 
+    @Override
     public void addPlayTime(long additionalTime) {
         this.playTime += additionalTime;
         this.isDirty = true;
     }
 
+    @Override
     public boolean isDirty() {
         return isDirty;
     }
 
+    @Override
     public void setDirty(boolean dirty) {
         isDirty = dirty;
     }

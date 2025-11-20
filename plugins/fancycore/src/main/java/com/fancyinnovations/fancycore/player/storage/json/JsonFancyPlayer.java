@@ -21,7 +21,7 @@ public record JsonFancyPlayer(
      */
     public static JsonFancyPlayer from(FancyPlayerImpl player) {
         return new JsonFancyPlayer(
-                player.getUuid().toString(),
+                player.getUUID().toString(),
                 player.getUsername(),
                 player.getNickname(),
                 Integer.toHexString(player.getChatColor().getRGB()),

@@ -31,7 +31,7 @@ public class FancyPlayerJsonStorage implements FancyPlayerStorage {
 
         JsonFancyPlayer jsonFancyPlayer = JsonFancyPlayer.from(fpImpl);
         try {
-            jdb.set(fpImpl.getUuid().toString(), jsonFancyPlayer);
+            jdb.set(fpImpl.getUUID().toString(), jsonFancyPlayer);
         } catch (IOException e) {
             FancyCorePlugin.get().getFancyLogger().error(
                     "Failed to save FancyPlayer",
