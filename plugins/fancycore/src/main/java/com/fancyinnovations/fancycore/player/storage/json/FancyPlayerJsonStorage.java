@@ -60,4 +60,9 @@ public class FancyPlayerJsonStorage implements FancyPlayerStorage {
     public void deletePlayer(UUID uuid) {
         jdb.delete(uuid.toString());
     }
+
+    @Override
+    public int countPlayers() {
+        return jdb.countDocuments("");
+    }
 }

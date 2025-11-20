@@ -1,6 +1,10 @@
 package com.fancyinnovations.fancycore.metrics;
 
+import com.fancyinnovations.fancycore.main.FancyCorePlugin;
+
 public class PluginMetrics {
+
+    private final static FancyCorePlugin plugin = FancyCorePlugin.get();
 
     public PluginMetrics() {
 
@@ -11,8 +15,7 @@ public class PluginMetrics {
     }
 
     private double totalAmountPlayers() {
-        // TODO: count documents in player storage
-        return 0.0;
+        return plugin.getPlayerStorage().countPlayers();
     }
 
     private String serverSizeCategory() {
