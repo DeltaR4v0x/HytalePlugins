@@ -16,12 +16,15 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class FancyCorePlugin implements FancyCore {
 
     private static FancyCorePlugin INSTANCE;
 
     private final ExtendedFancyLogger fancyLogger;
+    private final ScheduledExecutorService threadPool;
     private final PluginMetrics pluginMetrics;
 
     private final FancyPlayerStorage playerStorage;
@@ -49,6 +52,12 @@ public class FancyCorePlugin implements FancyCore {
                 List.of()
         );
 
+        threadPool = Executors.newScheduledThreadPool(4, r -> {
+            Thread thread = new Thread(r);
+            thread.setName("FancyCore-ThreadPool-" + thread.threadId());
+            return thread;
+        });
+
         pluginMetrics = new PluginMetrics();
 
         playerStorage = new FancyPlayerJsonStorage();
@@ -70,12 +79,19 @@ public class FancyCorePlugin implements FancyCore {
     public void onDisable() {
         fancyLogger.info("FancyCore is disabling...");
 
+        threadPool.shutdown();
+
         fancyLogger.info("FancyCore has been disabled.");
     }
 
     @Override
     public ExtendedFancyLogger getFancyLogger() {
         return fancyLogger;
+    }
+
+    @Override
+    public ScheduledExecutorService getThreadPool() {
+        return threadPool;
     }
 
     @Override
