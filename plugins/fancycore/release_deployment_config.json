@@ -1,0 +1,15 @@
+{
+  "project_name": "FancyCore",
+  "project_id": "TODO",
+  "plugin_jar_path": "../../../../plugins/fancycore/build/libs/FancyCore-%VERSION%.jar",
+  "changelog_path": "../../../../plugins/fancycore/CHANGELOG.md",
+  "version_path": "../../../../plugins/fancycore/VERSION",
+  "supported_versions": [
+    "TODO"
+  ],
+  "channel": "RELEASE",
+  "loaders": [
+    "hytale",
+  ],
+  "featured": true
+}
