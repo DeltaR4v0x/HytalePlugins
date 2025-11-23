@@ -2,6 +2,9 @@ package com.fancyinnovations.fancycore.api.events.service;
 
 import com.fancyinnovations.fancycore.api.events.FancyEvent;
 
+/**
+ * Service interface for managing and firing events within the FancyCore system.
+ */
 public interface EventService {
 
     /**
