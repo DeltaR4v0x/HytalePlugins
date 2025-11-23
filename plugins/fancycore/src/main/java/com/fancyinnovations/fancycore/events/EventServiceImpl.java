@@ -20,18 +20,18 @@ public class EventServiceImpl implements EventService {
     @Override
     public boolean fireEvent(FancyEvent event) {
         if (!this.listeners.containsKey(event.getClass())) {
-            return false;
+            return true;
         }
 
         for (EventListener<? extends FancyEvent> listener : this.listeners.get(event.getClass())) {
             ((EventListener<FancyEvent>) listener).on(event);
 
             if (event.isCancellable() && event.isCancelled()) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     @Override

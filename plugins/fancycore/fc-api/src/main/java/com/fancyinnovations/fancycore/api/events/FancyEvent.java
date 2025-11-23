@@ -20,6 +20,11 @@ public abstract class FancyEvent {
         this.cancelled = false;
     }
 
+    /**
+     * Fires this event using the FancyCore EventService.
+     *
+     * @return true if the event was not cancelled, false otherwise
+     */
     public boolean fire()  {
         return FancyCore.get().getEventService().fireEvent(this);
     }

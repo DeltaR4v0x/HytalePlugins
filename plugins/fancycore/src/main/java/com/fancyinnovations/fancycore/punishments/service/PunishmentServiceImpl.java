@@ -32,7 +32,7 @@ public class PunishmentServiceImpl implements PunishmentService {
                 -1
         );
 
-        if (new PlayerPunishedEvent(player, punishment).fire()) {
+        if (!new PlayerPunishedEvent(player, punishment).fire()) {
             return null;
         }
 
@@ -57,7 +57,7 @@ public class PunishmentServiceImpl implements PunishmentService {
                 expiresAt
         );
 
-        if (new PlayerPunishedEvent(player, punishment).fire()) {
+        if (!new PlayerPunishedEvent(player, punishment).fire()) {
             return null;
         }
 
@@ -85,7 +85,7 @@ public class PunishmentServiceImpl implements PunishmentService {
                 -1
         );
 
-        if (new PlayerPunishedEvent(player, punishment).fire()) {
+        if (!new PlayerPunishedEvent(player, punishment).fire()) {
             return null;
         }
 
@@ -110,7 +110,7 @@ public class PunishmentServiceImpl implements PunishmentService {
                 expiresAt
         );
 
-        if (new PlayerPunishedEvent(player, punishment).fire()) {
+        if (!new PlayerPunishedEvent(player, punishment).fire()) {
             return null;
         }
 
