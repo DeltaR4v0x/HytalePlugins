@@ -1,6 +1,7 @@
 package com.fancyinnovations.fancycore.api.events.service;
 
 import com.fancyinnovations.fancycore.api.events.FancyEvent;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Service interface for managing and firing events within the FancyCore system.
@@ -13,6 +14,7 @@ public interface EventService {
      * @param event the event to fire
      * @return true if the event was not cancelled, false otherwise
      */
+    @ApiStatus.Internal
     boolean fireEvent(FancyEvent event);
 
     /**
