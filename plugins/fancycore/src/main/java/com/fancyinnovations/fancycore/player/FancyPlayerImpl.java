@@ -1,5 +1,6 @@
 package com.fancyinnovations.fancycore.player;
 
+import com.fancyinnovations.fancycore.api.events.player.PlayerModifiedEvent;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -60,7 +61,12 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @Override
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        PlayerModifiedEvent playerModifiedEvent = new PlayerModifiedEvent(this, PlayerModifiedEvent.ModifiedField.NICKNAME, this.nickname, nickname);
+        if (!playerModifiedEvent.fire()) {
+            return;
+        }
+
+        this.nickname = playerModifiedEvent.getNewData().toString();
         this.isDirty = true;
     }
 
@@ -71,7 +77,12 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @Override
     public void setChatColor(Color chatColor) {
-        this.chatColor = chatColor;
+        PlayerModifiedEvent playerModifiedEvent = new PlayerModifiedEvent(this, PlayerModifiedEvent.ModifiedField.CHAT_COLOR, this.chatColor, chatColor);
+        if (!playerModifiedEvent.fire()) {
+            return;
+        }
+
+        this.chatColor = (Color) playerModifiedEvent.getNewData();
         this.isDirty = true;
     }
 
@@ -82,20 +93,21 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @Override
     public void setBalance(double balance) {
-        this.balance = balance;
+        PlayerModifiedEvent playerModifiedEvent = new PlayerModifiedEvent(this, PlayerModifiedEvent.ModifiedField.BALANCE, this.balance, balance);
+        if (!playerModifiedEvent.fire()) {
+            return;
+        }
         this.isDirty = true;
     }
 
     @Override
     public void addBalance(double amount) {
-        this.balance += amount;
-        this.isDirty = true;
+        setBalance(this.balance + amount);
     }
 
     @Override
     public void removeBalance(double amount) {
-        this.balance -= amount;
-        this.isDirty = true;
+        setBalance(this.balance - amount);
     }
 
     @Override
@@ -105,7 +117,13 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @ApiStatus.Internal
     public void setFirstLoginTime(long firstLoginTime) {
-        this.firstLoginTime = firstLoginTime;
+        PlayerModifiedEvent playerModifiedEvent = new PlayerModifiedEvent(this, PlayerModifiedEvent.ModifiedField.FIRST_LOGIN_TIME, this.firstLoginTime, firstLoginTime);
+        if (!playerModifiedEvent.fire()) {
+            return;
+        }
+
+        this.firstLoginTime = (long) playerModifiedEvent.getNewData();
+        this.isDirty = true;
     }
 
     @Override
@@ -115,14 +133,18 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @ApiStatus.Internal
     public void setPlayTime(long playTime) {
-        this.playTime = playTime;
+        PlayerModifiedEvent playerModifiedEvent = new PlayerModifiedEvent(this, PlayerModifiedEvent.ModifiedField.PLAY_TIME, this.playTime, playTime);
+        if (!playerModifiedEvent.fire()) {
+            return;
+        }
+
+        this.playTime = (long) playerModifiedEvent.getNewData();
         this.isDirty = true;
     }
 
     @Override
     public void addPlayTime(long additionalTime) {
-        this.playTime += additionalTime;
-        this.isDirty = true;
+        setPlayTime(this.playTime + additionalTime);
     }
 
     @Override
