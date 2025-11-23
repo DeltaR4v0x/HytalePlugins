@@ -2,6 +2,7 @@ package com.fancyinnovations.fancycore.api;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerStorage;
+import com.fancyinnovations.fancycore.api.punishments.PunishmentService;
 import com.fancyinnovations.fancycore.api.punishments.PunishmentStorage;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 
@@ -19,5 +20,6 @@ public interface FancyCore {
     FancyPlayerService getPlayerService();
 
     PunishmentStorage getPunishmentStorage();
+    PunishmentService getPunishmentService();
 
 }

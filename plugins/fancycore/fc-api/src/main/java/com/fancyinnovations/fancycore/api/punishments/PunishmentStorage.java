@@ -1,13 +1,19 @@
 package com.fancyinnovations.fancycore.api.punishments;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.List;
 import java.util.UUID;
 
+@ApiStatus.Internal
 public interface PunishmentStorage {
 
+    @ApiStatus.Internal
     void createPunishment(Punishment punishment);
 
+    @ApiStatus.Internal
     List<Punishment> getPunishmentsForPlayer(UUID player);
 
+    @ApiStatus.Internal
     List<Punishment> getAllPunishments();
 }
