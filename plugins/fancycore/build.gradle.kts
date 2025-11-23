@@ -18,6 +18,8 @@ allprojects {
 }
 
 dependencies {
+    compileOnly(files("../../libraries/hytale-server/server.jar"))
+
     implementation(project(":plugins:fancycore:fc-api"))
 
     implementation("de.oliver:JDB:1.0.4")
