@@ -24,9 +24,11 @@ public interface FancyCore {
 
     EventService getEventService();
 
+    @ApiStatus.Internal
     FancyPlayerStorage getPlayerStorage();
     FancyPlayerService getPlayerService();
 
+    @ApiStatus.Internal
     PunishmentStorage getPunishmentStorage();
     PunishmentService getPunishmentService();
 
