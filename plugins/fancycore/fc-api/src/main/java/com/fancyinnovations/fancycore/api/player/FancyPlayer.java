@@ -6,6 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+/**
+ * Wrapper around the actual Player object from the Hytale API.
+ * This interface provides methods to interact with the player.
+ */
 public interface FancyPlayer {
 
     FancyPlayerData getData();

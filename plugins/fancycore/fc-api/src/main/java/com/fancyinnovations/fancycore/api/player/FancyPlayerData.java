@@ -7,6 +7,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Represents the data associated with a Fancy Player.
+ */
 public interface FancyPlayerData {
 
     UUID getUUID();
