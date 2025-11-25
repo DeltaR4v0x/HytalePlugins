@@ -1,6 +1,8 @@
 package com.fancyinnovations.fancycore.api.placeholders;
 
 import com.fancyinnovations.fancycore.api.FancyCore;
+import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Service for managing and parsing placeholders within strings.
@@ -29,6 +31,10 @@ public interface PlaceholderService {
      * @param input The input string containing placeholders.
      * @return The parsed string with placeholders replaced.
      */
-    String parse(String input);
+    String parse(@Nullable FancyPlayer player, String input);
+
+    default String parse(String input) {
+        return parse(null, input);
+    }
 
 }
