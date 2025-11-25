@@ -14,6 +14,7 @@ import com.fancyinnovations.fancycore.metrics.PluginMetrics;
 import com.fancyinnovations.fancycore.moderation.service.PunishmentServiceImpl;
 import com.fancyinnovations.fancycore.moderation.storage.json.PunishmentJsonStorage;
 import com.fancyinnovations.fancycore.placeholders.PlaceholderServiceImpl;
+import com.fancyinnovations.fancycore.placeholders.builtin.BuiltInPlaceholderProviders;
 import com.fancyinnovations.fancycore.player.service.CleanUpPlayerCacheRunnable;
 import com.fancyinnovations.fancycore.player.service.FancyPlayerServiceImpl;
 import com.fancyinnovations.fancycore.player.storage.SavePlayersRunnable;
@@ -91,6 +92,7 @@ public class FancyCorePlugin implements FancyCore {
 
         eventService = new EventServiceImpl();
         placeholderService = new PlaceholderServiceImpl();
+        BuiltInPlaceholderProviders.registerAll();
 
         translationService = new TranslationService();
 
