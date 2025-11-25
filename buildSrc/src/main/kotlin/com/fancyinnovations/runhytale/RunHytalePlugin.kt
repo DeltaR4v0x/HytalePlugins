@@ -7,7 +7,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
-import java.net.URL
+import java.net.URI
+import java.security.MessageDigest
 
 open class RunHytalePlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -38,43 +39,49 @@ open class RunServerTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        val runDir = File(project.projectDir, "run")
-        if (!runDir.exists()) runDir.mkdirs()
-
+        val runDir = File(project.projectDir, "run").apply { mkdirs() }
+        val pluginsDir = File(runDir, "plugins").apply { mkdirs() }
         val jarFile = File(runDir, "server.jar")
 
-        if (!jarFile.exists()) {
+        // Cache folder
+        val cacheDir = File(project.layout.buildDirectory.asFile.get(), "hytale-cache").apply { mkdirs() }
+
+        // Compute a hash from the URL for caching
+        val urlHash = MessageDigest.getInstance("SHA-256")
+            .digest(jarUrl.get().toByteArray())
+            .joinToString("") { "%02x".format(it) }
+        val cachedJar = File(cacheDir, "$urlHash.jar")
+
+        // Download if cache is missing
+        if (!cachedJar.exists()) {
             println("Downloading server jar from ${jarUrl.get()}")
-            URL(jarUrl.get()).openStream().use { input ->
-                jarFile.outputStream().use { output ->
+            URI.create(jarUrl.get()).toURL().openStream().use { input ->
+                cachedJar.outputStream().use { output ->
                     input.copyTo(output)
                 }
             }
-            println("Downloaded server jar to ${jarFile.absolutePath}")
+            println("Downloaded server jar to cache: ${cachedJar.absolutePath}")
         } else {
-            println("Server jar already exists at ${jarFile.absolutePath}")
+            println("Using cached server jar: ${cachedJar.absolutePath}")
         }
 
-        // Copy the plugin shadowJar output to run/plugins/
-        val shadowJarTask = project.tasks.findByName("shadowJar")
-        if (shadowJarTask != null) {
-            val pluginsDir = File(runDir, "plugins")
-            if (!pluginsDir.exists()) pluginsDir.mkdirs()
+        // Copy jar to run directory
+        cachedJar.copyTo(jarFile, overwrite = true)
+        println("Copied server jar")
 
-            val shadowJarFile = shadowJarTask.outputs.files.firstOrNull()
-            if (shadowJarFile != null && shadowJarFile.exists()) {
-                shadowJarFile.copyTo(File(pluginsDir, shadowJarFile.name), overwrite = true)
-                println("Copied plugin jar to ${pluginsDir.absolutePath}")
-            }
+        // Copy plugin shadowJar output
+        project.tasks.findByName("shadowJar")?.outputs?.files?.firstOrNull()?.let { shadowJar ->
+            shadowJar.copyTo(File(pluginsDir, shadowJar.name), overwrite = true)
+            println("Copied plugin jar")
         }
 
-        println("Running server jar...")
+        println("Running server jar ...")
 
         val process = ProcessBuilder("java", "-jar", jarFile.name)
             .directory(runDir)
             .start()
 
-        // Handle task cancellation
+        // Stop server if task is canceled
         project.gradle.buildFinished {
             if (process.isAlive) {
                 println("Task cancelled. Stopping the server...")
@@ -82,21 +89,25 @@ open class RunServerTask : DefaultTask() {
             }
         }
 
-        // Thread to read stdout and print it live
+        // stdout
         Thread {
-            process.inputStream.bufferedReader().useLines { lines ->
-                lines.forEach { println(it) }
+            process.inputStream.bufferedReader().useLines { it ->
+                it.forEach {
+                    println(it)
+                }
             }
         }.start()
 
-        // Thread to read stderr and print it live
+        // stderr
         Thread {
-            process.errorStream.bufferedReader().useLines { lines ->
-                lines.forEach { System.err.println(it) }
+            process.errorStream.bufferedReader().useLines { it ->
+                it.forEach {
+                    System.err.println(it)
+                }
             }
         }.start()
 
-        // Thread to forward console input to process stdin
+        // stdin
         Thread {
             System.`in`.bufferedReader().useLines { lines ->
                 lines.forEach {
