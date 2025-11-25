@@ -18,6 +18,12 @@ open class RunHytalePlugin : Plugin<Project> {
             group = "run-hytale"
             description = "Downloads and runs the Hytale server jar."
         }
+
+        project.tasks.findByName("shadowJar")?.let {
+            runTask.configure {
+                dependsOn(it)
+            }
+        }
     }
 }
 
@@ -47,6 +53,19 @@ open class RunServerTask : DefaultTask() {
             println("Downloaded server jar to ${jarFile.absolutePath}")
         } else {
             println("Server jar already exists at ${jarFile.absolutePath}")
+        }
+
+        // Copy the plugin shadowJar output to run/plugins/
+        val shadowJarTask = project.tasks.findByName("shadowJar")
+        if (shadowJarTask != null) {
+            val pluginsDir = File(runDir, "plugins")
+            if (!pluginsDir.exists()) pluginsDir.mkdirs()
+
+            val shadowJarFile = shadowJarTask.outputs.files.firstOrNull()
+            if (shadowJarFile != null && shadowJarFile.exists()) {
+                shadowJarFile.copyTo(File(pluginsDir, shadowJarFile.name), overwrite = true)
+                println("Copied plugin jar to ${pluginsDir.absolutePath}")
+            }
         }
 
         println("Running server jar...")

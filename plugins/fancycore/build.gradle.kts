@@ -46,7 +46,7 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release = 25
+        options.release = 24
     }
 
     processResources {
@@ -68,7 +68,7 @@ tasks {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(24))
 }
 
 val gitCommitHash: Provider<String> = providers.exec {
