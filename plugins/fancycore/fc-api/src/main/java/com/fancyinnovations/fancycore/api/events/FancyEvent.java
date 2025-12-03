@@ -1,6 +1,10 @@
 package com.fancyinnovations.fancycore.api.events;
 
 import com.fancyinnovations.fancycore.api.FancyCore;
+import com.fancyinnovations.fancycore.api.discord.Embed;
+import com.fancyinnovations.fancycore.api.discord.Message;
+
+import java.util.List;
 
 /**
  * The base class for all events in the FancyCore system.
@@ -68,5 +72,23 @@ public abstract class FancyEvent {
      */
     public long firedAt() {
         return firedAt;
+    }
+
+    /**
+     * Gets a Discord message representation of this event.
+     *
+     * @return a Message object for Discord, or null if not applicable
+     */
+    public Message getDiscordMessage() {
+        return new Message(
+                "An event of type " + this.getClass().getSimpleName() + " was fired.",
+                List.of(
+                        new Embed(
+                                "Event Fired",
+                                "Event Type: " + this.getClass().getSimpleName() + "\nFired At: <t:"+firedAt+":f>",
+                                0x3498db
+                        )
+                )
+        );
     }
 }
