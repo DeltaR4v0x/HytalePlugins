@@ -32,7 +32,7 @@ public abstract class FancyEvent {
      *
      * @return true if the event was not cancelled, false otherwise
      */
-    public boolean fire() {
+    public final boolean fire() {
         return FancyCore.get().getEventService().fireEvent(this);
     }
 
@@ -41,7 +41,7 @@ public abstract class FancyEvent {
      *
      * @return true if the event is cancellable, false otherwise
      */
-    public boolean isCancellable() {
+    public final boolean isCancellable() {
         return isCancellable;
     }
 
@@ -50,14 +50,14 @@ public abstract class FancyEvent {
      *
      * @return true if the event is cancelled, false otherwise
      */
-    public boolean isCancelled() {
+    public final boolean isCancelled() {
         return cancelled;
     }
 
     /**
      * Cancels this event if it is cancellable.
      */
-    public void cancel() {
+    public final void cancel() {
         if (!isCancellable) {
             throw new UnsupportedOperationException("This event cannot be cancelled.");
         }
@@ -70,7 +70,7 @@ public abstract class FancyEvent {
      *
      * @return the timestamp in milliseconds
      */
-    public long firedAt() {
+    public final long firedAt() {
         return firedAt;
     }
 
@@ -80,6 +80,7 @@ public abstract class FancyEvent {
      * @return a Message object for Discord, or null if not applicable
      */
     public Message getDiscordMessage() {
+        // TODO: make text translatable
         return new Message(
                 "An event of type " + this.getClass().getSimpleName() + " was fired.",
                 List.of(

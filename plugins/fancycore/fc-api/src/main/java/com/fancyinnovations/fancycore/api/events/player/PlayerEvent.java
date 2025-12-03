@@ -8,7 +8,7 @@ import com.fancyinnovations.fancycore.api.player.FancyPlayer;
  */
 public abstract class PlayerEvent extends FancyEvent {
 
-    private final FancyPlayer player;
+    protected final FancyPlayer player;
 
     public PlayerEvent(FancyPlayer player) {
         super();
