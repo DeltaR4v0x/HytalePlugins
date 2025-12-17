@@ -2,6 +2,8 @@ package com.fancyinnovations.fancycore.main;
 
 import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.FancyCoreConfig;
+import com.fancyinnovations.fancycore.api.economy.CurrencyService;
+import com.fancyinnovations.fancycore.api.economy.CurrencyStorage;
 import com.fancyinnovations.fancycore.api.events.service.EventService;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentService;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentStorage;
@@ -9,6 +11,8 @@ import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerStorage;
 import com.fancyinnovations.fancycore.config.FancyCoreConfigImpl;
+import com.fancyinnovations.fancycore.economy.service.CurrencyServiceImpl;
+import com.fancyinnovations.fancycore.economy.storage.json.CurrencyJsonStorage;
 import com.fancyinnovations.fancycore.events.EventServiceImpl;
 import com.fancyinnovations.fancycore.metrics.PluginMetrics;
 import com.fancyinnovations.fancycore.moderation.service.PunishmentServiceImpl;
@@ -57,6 +61,9 @@ public class FancyCorePlugin implements FancyCore {
     private final PunishmentStorage punishmentStorage;
     private final PunishmentService punishmentService;
 
+    private final CurrencyStorage currencyStorage;
+    private final CurrencyService currencyService;
+
     public FancyCorePlugin() {
         INSTANCE = this;
         FancyCore.InstanceHolder.setInstance(INSTANCE);
@@ -103,6 +110,9 @@ public class FancyCorePlugin implements FancyCore {
 
         punishmentStorage = new PunishmentJsonStorage();
         punishmentService = new PunishmentServiceImpl();
+
+        currencyStorage = new CurrencyJsonStorage();
+        currencyService = new CurrencyServiceImpl();
     }
 
     public static FancyCorePlugin get() {
@@ -191,5 +201,15 @@ public class FancyCorePlugin implements FancyCore {
     @Override
     public PunishmentService getPunishmentService() {
         return punishmentService;
+    }
+
+    @Override
+    public CurrencyStorage getCurrencyStorage() {
+        return currencyStorage;
+    }
+
+    @Override
+    public CurrencyService getCurrencyService() {
+        return currencyService;
     }
 }

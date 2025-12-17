@@ -1,5 +1,7 @@
 package com.fancyinnovations.fancycore.api;
 
+import com.fancyinnovations.fancycore.api.economy.CurrencyService;
+import com.fancyinnovations.fancycore.api.economy.CurrencyStorage;
 import com.fancyinnovations.fancycore.api.events.service.EventService;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentService;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentStorage;
@@ -36,6 +38,11 @@ public interface FancyCore {
     PunishmentStorage getPunishmentStorage();
 
     PunishmentService getPunishmentService();
+
+    @ApiStatus.Internal
+    CurrencyStorage getCurrencyStorage();
+
+    CurrencyService getCurrencyService();
 
 
     @ApiStatus.Internal

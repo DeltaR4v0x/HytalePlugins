@@ -8,6 +8,8 @@ public interface FancyCoreConfig {
 
     String[] getEventDiscordNotifications();
 
+    String primaryCurrencyName();
+
     void reload();
 
 }

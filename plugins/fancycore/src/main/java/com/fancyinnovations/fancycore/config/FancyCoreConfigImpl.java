@@ -10,6 +10,7 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
     public static final String LOG_LEVEL_PATH = "settings.logging.level";
     public static final String EVENT_DISCORD_WEBHOOK_URL_PATH = "settings.events.discord_webhook_url";
     public static final String EVENT_DISCORD_NOTIFICATIONS = "settings.events.notifications_enabled";
+    public static final String PRIMARY_CURRENCY_NAME_PATH = "settings.economy.primary_currency";
 
     private static final String CONFIG_FILE_PATH = "plugins/FancyHolograms/config.yml";
     private ConfigJSON config;
@@ -43,6 +44,15 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
                 false,
                 String[].class
         ));
+
+        config.addField(new ConfigField<>(
+                PRIMARY_CURRENCY_NAME_PATH,
+                "The name of the primary currency used in the economy system.",
+                false,
+                "Dollar",
+                false,
+                String.class
+        ));
     }
 
     @Override
@@ -63,5 +73,10 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
     @Override
     public String[] getEventDiscordNotifications() {
         return config.get(EVENT_DISCORD_NOTIFICATIONS);
+    }
+
+    @Override
+    public String primaryCurrencyName() {
+        return config.get(PRIMARY_CURRENCY_NAME_PATH);
     }
 }
