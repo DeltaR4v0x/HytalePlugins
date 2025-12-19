@@ -54,7 +54,7 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
 
-        options.release.set(24)
+        options.release.set(25)
     }
 }
 
