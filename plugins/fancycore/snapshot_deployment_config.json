@@ -7,10 +7,20 @@
     "space_id": "fc",
     "platform": "hytale_plugin",
     "channel": "alpha",
-    "supported_versions": [ "TODO" ]
+    "supported_versions": [ "Release 1.0" ]
+  },
+  "orbis": {
+    "resource_id": "fancycore",
+    "is_pre_release": false,
+    "hytale_version_ids": [ "Release 1.0" ]
   },
   "modtale": {
-    "project_id": "fancycore-920604c6-ba82-4856-be7f-d02d0533a14a",
-    "game_versions": [ "TODO" ]
+    "project_id": "fancycore-4ab11727-c0b4-4c76-bb03-a86d781ec24b",
+    "game_versions": [ "Release 1.0" ]
+  },
+  "unifiedhytale": {
+    "project_id": "fancycore",
+    "game_versions": [ "Release 1.0" ],
+    "release_channel": "snapshot"
   }
 }
