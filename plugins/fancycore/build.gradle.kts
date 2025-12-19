@@ -23,10 +23,14 @@ dependencies {
 
     implementation(project(":plugins:fancycore:fc-api"))
 
+    implementation(project(":libraries:version-checker"))
+
     implementation("de.oliver:JDB:1.0.4")
     implementation("de.oliver:config:1.0.0")
     implementation("de.oliver.FancyAnalytics:java-sdk:0.0.5")
     implementation("de.oliver.FancyAnalytics:logger:0.0.9")
+    implementation("de.oliver.FancyAnalytics:logger:0.0.9")
+    implementation("com.fancyinnovations.fancyspaces:java-sdk:0.0.2")
 
     compileOnly("com.google.code.gson:gson:2.13.2")
     implementation("org.jetbrains:annotations:26.0.2-1")
@@ -49,7 +53,7 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-        options.release = 24
+        options.release = 25
     }
 
     processResources {
@@ -79,7 +83,7 @@ tasks {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(24))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 val gitCommitHash: Provider<String> = providers.exec {
