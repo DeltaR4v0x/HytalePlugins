@@ -7,16 +7,21 @@ public class FancySpacesVersionFetcher implements VersionFetcher {
 
     private final FancySpaces fs;
     private final String spaceID;
+    private final String channel;
 
-    public FancySpacesVersionFetcher(String spaceID) {
+    public FancySpacesVersionFetcher(String spaceID, String channel) {
         this.spaceID = spaceID;
+        this.channel = channel;
         this.fs = new FancySpaces();
     }
 
+    public FancySpacesVersionFetcher(String spaceID) {
+        this(spaceID, "");
+    }
 
     @Override
     public FetchedVersion latestVersion() {
-        Version version = fs.getVersionService().getLatestVersion(spaceID, "minecraft_plugin", "release");
+        Version version = fs.getVersionService().getLatestVersion(spaceID, "hytale_plugin", channel);
 
         return new FetchedVersion(
                 version.name(),
