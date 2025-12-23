@@ -8,11 +8,11 @@ public interface ChatRoom {
 
     String getName();
 
-    List<FancyPlayer> getParticipants();
+    List<FancyPlayer> getWatchers();
 
-    void join(FancyPlayer player);
+    void startWatching(FancyPlayer player);
 
-    void leave(FancyPlayer player);
+    void stopWatching(FancyPlayer player);
 
     void broadcastMessage (String message);
 

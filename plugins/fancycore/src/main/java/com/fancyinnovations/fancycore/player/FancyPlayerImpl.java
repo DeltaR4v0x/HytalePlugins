@@ -136,7 +136,7 @@ public class FancyPlayerImpl implements FancyPlayer {
                 currentChatRoom = FancyCore.get().getChatService().createChatRoom(defaultChatroomName);
             }
 
-            currentChatRoom.join(this);
+            currentChatRoom.startWatching(this);
         }
 
         return currentChatRoom;

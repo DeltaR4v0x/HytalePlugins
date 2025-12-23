@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatRoomImpl implements ChatRoom {
 
     private final String name;
-    private final Set<FancyPlayer> participants;
+    private final Set<FancyPlayer> watchers;
     private final Map<UUID, Long> lastMessageTimestamps;
     private boolean muted;
     private long cooldown;
 
     public ChatRoomImpl(String name) {
         this.name = name;
-        this.participants = new HashSet<>();
+        this.watchers = new HashSet<>();
         this.muted = false;
         this.cooldown = 0;
         this.lastMessageTimestamps = new ConcurrentHashMap<>();
@@ -25,7 +25,7 @@ public class ChatRoomImpl implements ChatRoom {
 
     public ChatRoomImpl(String name, boolean muted, long cooldown) {
         this.name = name;
-        this.participants = new HashSet<>();
+        this.watchers = new HashSet<>();
         this.muted = muted;
         this.cooldown = cooldown;
         this.lastMessageTimestamps = new ConcurrentHashMap<>();
@@ -37,23 +37,23 @@ public class ChatRoomImpl implements ChatRoom {
     }
 
     @Override
-    public List<FancyPlayer> getParticipants() {
-        return new ArrayList<>(participants);
+    public List<FancyPlayer> getWatchers() {
+        return new ArrayList<>(watchers);
     }
 
     @Override
-    public void join(FancyPlayer player) {
-        participants.add(player);
+    public void startWatching(FancyPlayer player) {
+        watchers.add(player);
     }
 
     @Override
-    public void leave(FancyPlayer player) {
-        participants.remove(player);
+    public void stopWatching(FancyPlayer player) {
+        watchers.remove(player);
     }
 
     @Override
     public void broadcastMessage(String message) {
-        for (FancyPlayer participant : participants) {
+        for (FancyPlayer participant : watchers) {
             participant.sendMessage(message);
         }
     }
