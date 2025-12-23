@@ -25,6 +25,21 @@ public class VersionChecker {
     }
 
     /**
+     * Checks if a new (release) version is available.
+     *
+     * @return The latest version if a new version is available, null otherwise.
+     */
+    public FetchedVersion check() {
+        FetchedVersion latestVersion = versionFetcher.latestVersion();
+        FetchedVersion currentVersion = versionFetcher.version(versionConfig.version());
+        if (latestVersion.isNewerThan(currentVersion)) {
+            return latestVersion;
+        }
+
+        return null;
+    }
+
+    /**
      * Checks if the latest (release) version is installed.
      * Sends a warning message to console if not.
      */
