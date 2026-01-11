@@ -12,7 +12,7 @@
   "orbis": {
     "resource_id": "cmj49s5lm000a01s6az79izy3",
     "channel": "ALPHA",
-    "hytale_version_ids": [ "cmj1x42ef001k4qz9r03ojrpe" ]
+    "compatible_hytale_version_ids": [ "cmj1x42ef001k4qz9r03ojrpe" ]
   },
   "modtale": {
     "project_id": "4ab11727-c0b4-4c76-bb03-a86d781ec24b",
