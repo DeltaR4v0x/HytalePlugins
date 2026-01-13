@@ -217,7 +217,6 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
     }
 
     public void registerCommands() {
-        // TODO (HTEA): register commands properly
         CommandManager.get().register(new UpdatePluginCMD());
     }
 

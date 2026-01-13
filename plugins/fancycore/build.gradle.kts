@@ -72,7 +72,7 @@ tasks {
         filesMatching("version.json") {
             expand(props)
         }
-        filesMatching("manifest.json") { // TODO (HTEA): Update file name if needed
+        filesMatching("manifest.json") {
             expand(props)
         }
     }

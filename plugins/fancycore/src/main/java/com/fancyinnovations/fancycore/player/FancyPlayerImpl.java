@@ -121,8 +121,7 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @Override
     public boolean isOnline() {
-        // TODO (HTEA): implement a proper online check with real player object
-        return player != null;
+        return player != null && player.isValid();
     }
 
     @Override
