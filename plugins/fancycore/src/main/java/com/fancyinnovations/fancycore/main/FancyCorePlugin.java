@@ -6,6 +6,8 @@ import com.fancyinnovations.fancycore.api.chat.ChatService;
 import com.fancyinnovations.fancycore.api.chat.ChatStorage;
 import com.fancyinnovations.fancycore.api.economy.CurrencyService;
 import com.fancyinnovations.fancycore.api.economy.CurrencyStorage;
+import com.fancyinnovations.fancycore.api.events.server.ServerStartedEvent;
+import com.fancyinnovations.fancycore.api.events.server.ServerStoppedEvent;
 import com.fancyinnovations.fancycore.api.events.service.EventService;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentService;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentStorage;
@@ -202,6 +204,8 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         registerCommands();
         registerListeners();
 
+        new ServerStartedEvent().fire();
+
         fancyLogger.info("FancyCore has been started.");
     }
 
@@ -213,6 +217,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
         threadPool.shutdown();
 
+        new ServerStoppedEvent().fire();
 
         fancyLogger.info("FancyCore has been shut down.");
     }
