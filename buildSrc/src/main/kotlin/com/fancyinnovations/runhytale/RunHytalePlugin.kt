@@ -7,8 +7,6 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
-import java.net.URI
-import java.security.MessageDigest
 
 open class RunHytalePlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -44,30 +42,30 @@ open class RunServerTask : DefaultTask() {
         val jarFile = File(runDir, "server.jar")
 
         // Cache folder
-        val cacheDir = File(project.layout.buildDirectory.asFile.get(), "hytale-cache").apply { mkdirs() }
-
-        // Compute a hash from the URL for caching
-        val urlHash = MessageDigest.getInstance("SHA-256")
-            .digest(jarUrl.get().toByteArray())
-            .joinToString("") { "%02x".format(it) }
-        val cachedJar = File(cacheDir, "$urlHash.jar")
-
-        // Download if cache is missing
-        if (!cachedJar.exists()) {
-            println("Downloading server jar from ${jarUrl.get()}")
-            URI.create(jarUrl.get()).toURL().openStream().use { input ->
-                cachedJar.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            }
-            println("Downloaded server jar to cache: ${cachedJar.absolutePath}")
-        } else {
-            println("Using cached server jar: ${cachedJar.absolutePath}")
-        }
-
-        // Copy jar to run directory
-        cachedJar.copyTo(jarFile, overwrite = true)
-        println("Copied server jar")
+//        val cacheDir = File(project.layout.buildDirectory.asFile.get(), "hytale-cache").apply { mkdirs() }
+//
+//        // Compute a hash from the URL for caching
+//        val urlHash = MessageDigest.getInstance("SHA-256")
+//            .digest(jarUrl.get().toByteArray())
+//            .joinToString("") { "%02x".format(it) }
+//        val cachedJar = File(cacheDir, "$urlHash.jar")
+//
+//        // Download if cache is missing
+//        if (!cachedJar.exists()) {
+//            println("Downloading server jar from ${jarUrl.get()}")
+//            URI.create(jarUrl.get()).toURL().openStream().use { input ->
+//                cachedJar.outputStream().use { output ->
+//                    input.copyTo(output)
+//                }
+//            }
+//            println("Downloaded server jar to cache: ${cachedJar.absolutePath}")
+//        } else {
+//            println("Using cached server jar: ${cachedJar.absolutePath}")
+//        }
+//
+//        // Copy jar to run directory
+//        cachedJar.copyTo(jarFile, overwrite = true)
+//        println("Copied server jar")
 
         // Copy plugin shadowJar output
         project.tasks.findByName("shadowJar")?.outputs?.files?.firstOrNull()?.let { shadowJar ->
@@ -77,7 +75,7 @@ open class RunServerTask : DefaultTask() {
 
         println("Running server jar ...")
 
-        val process = ProcessBuilder("java", "-jar", jarFile.name)
+        val process = ProcessBuilder("java", "-jar", jarFile.name, "--assets", "assets.zip")
             .directory(runDir)
             .start()
 

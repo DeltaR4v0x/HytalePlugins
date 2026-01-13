@@ -18,7 +18,6 @@ import com.fancyinnovations.fancycore.chat.service.ChatServiceImpl;
 import com.fancyinnovations.fancycore.chat.storage.json.ChatJsonStorage;
 import com.fancyinnovations.fancycore.commands.server.UpdatePluginCMD;
 import com.fancyinnovations.fancycore.config.FancyCoreConfigImpl;
-import com.fancyinnovations.fancycore.economy.service.CurrencyServiceImpl;
 import com.fancyinnovations.fancycore.economy.storage.json.CurrencyJsonStorage;
 import com.fancyinnovations.fancycore.events.EventServiceImpl;
 import com.fancyinnovations.fancycore.listeners.PlayerChatListener;
@@ -39,12 +38,15 @@ import com.fancyinnovations.fancycore.translations.TranslationService;
 import com.fancyinnovations.versionchecker.FancySpacesVersionFetcher;
 import com.fancyinnovations.versionchecker.VersionChecker;
 import com.google.gson.Gson;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +54,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class FancyCorePlugin implements FancyCore {
+public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
     public static final Gson GSON = new Gson();
     private static FancyCorePlugin INSTANCE;
@@ -60,34 +62,35 @@ public class FancyCorePlugin implements FancyCore {
     private final ExtendedFancyLogger fancyLogger;
     private final ScheduledExecutorService threadPool;
 
-    private final FancyCoreConfig fancyCoreConfig;
-    private final VersionChecker versionChecker;
+    private FancyCoreConfig fancyCoreConfig;
+    private VersionChecker versionChecker;
 
-    private final PluginMetrics pluginMetrics;
+    private PluginMetrics pluginMetrics;
 
-    private final EventService eventService;
-    private final PlaceholderService placeholderService;
+    private EventService eventService;
+    private PlaceholderService placeholderService;
 
-    private final TranslationService translationService;
+    private TranslationService translationService;
 
-    private final FancyPlayerStorage playerStorage;
-    private final FancyPlayerService playerService;
-    private final SavePlayersRunnable savePlayersRunnable;
-    private final CleanUpPlayerCacheRunnable cleanUpPlayerCacheRunnable;
+    private FancyPlayerStorage playerStorage;
+    private FancyPlayerService playerService;
+    private SavePlayersRunnable savePlayersRunnable;
+    private CleanUpPlayerCacheRunnable cleanUpPlayerCacheRunnable;
 
-    private final PunishmentStorage punishmentStorage;
-    private final PunishmentService punishmentService;
+    private PunishmentStorage punishmentStorage;
+    private PunishmentService punishmentService;
 
-    private final CurrencyStorage currencyStorage;
-    private final CurrencyService currencyService;
+    private CurrencyStorage currencyStorage;
+    private CurrencyService currencyService;
 
-    private final PermissionStorage permissionStorage;
-    private final PermissionService permissionService;
+    private PermissionStorage permissionStorage;
+    private PermissionService permissionService;
 
-    private final ChatStorage chatStorage;
-    private final ChatService chatService;
+    private ChatStorage chatStorage;
+    private ChatService chatService;
 
-    public FancyCorePlugin() {
+    public FancyCorePlugin(@Nonnull JavaPluginInit init) {
+        super(init);
         INSTANCE = this;
         FancyCore.InstanceHolder.setInstance(INSTANCE);
 
@@ -115,6 +118,15 @@ public class FancyCorePlugin implements FancyCore {
             thread.setName("FancyCore-ThreadPool-" + thread.threadId());
             return thread;
         });
+    }
+
+    public static FancyCorePlugin get() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected void setup() {
+        fancyLogger.info("Setting up FancyCore...");
 
         fancyCoreConfig = new FancyCoreConfigImpl();
         versionChecker = new VersionChecker(fancyLogger, "FancyCore", new FancySpacesVersionFetcher("fc"));
@@ -136,7 +148,7 @@ public class FancyCorePlugin implements FancyCore {
         punishmentService = new PunishmentServiceImpl();
 
         currencyStorage = new CurrencyJsonStorage();
-        currencyService = new CurrencyServiceImpl();
+//        currencyService = new CurrencyServiceImpl();
 
         permissionStorage = new PermissionJsonStorage();
         permissionService = new PermissionServiceImpl();
@@ -145,18 +157,11 @@ public class FancyCorePlugin implements FancyCore {
         chatService = new ChatServiceImpl();
 
         SeedDefaultData.seed();
-    }
-
-    public static FancyCorePlugin get() {
-        return INSTANCE;
-    }
-
-    public void setup() {
-        fancyLogger.info("Setting up FancyCore...");
 
         fancyLogger.info("FancyCore has been set up.");
     }
 
+    @Override
     public void start() {
         fancyLogger.info("FancyCore is starting...");
 
@@ -173,7 +178,7 @@ public class FancyCorePlugin implements FancyCore {
         fancyLogger.setCurrentLevel(logLevel);
 
         // check if latest version is running
-        versionChecker.checkForConsole();
+//        versionChecker.checkForConsole();
 
         // TODO enable this once FA integration is configured
         // versionChecker.checkPluginVersionChanged(apiClient, "fc");
@@ -193,7 +198,8 @@ public class FancyCorePlugin implements FancyCore {
         fancyLogger.info("FancyCore has been started.");
     }
 
-    public void shutdown() {
+    @Override
+    protected void shutdown() {
         fancyLogger.info("FancyCore is shutting down...");
 
         threadPool.shutdown();

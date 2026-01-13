@@ -33,6 +33,9 @@ public class FancySpacesVersionFetcher implements VersionFetcher {
     @Override
     public FetchedVersion version(String name) {
         Version version = fs.getVersionService().getVersion(spaceID, name);
+        if (version == null) {
+            return null;
+        }
 
         return new FetchedVersion(
                 version.name(),
