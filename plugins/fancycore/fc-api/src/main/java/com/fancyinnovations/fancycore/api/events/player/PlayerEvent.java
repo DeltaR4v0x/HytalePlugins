@@ -36,7 +36,7 @@ public abstract class PlayerEvent extends FancyEvent {
                 List.of(
                         new Embed(
                                 "Player event fired",
-                                "Event Type: " + this.getClass().getSimpleName() + "\nFired At: <t:"+fire()+":f>" +
+                                "Event Type: " + this.getClass().getSimpleName() + "\nFired At: <t:"+firedAt()+":f>" +
                                         "\nPlayer: " + player.getData().getUsername(),
                                 0x3498db
                         )

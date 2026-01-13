@@ -4,6 +4,8 @@ import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.events.chat.*;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+import com.fancyinnovations.fancycore.main.FancyCorePlugin;
+import de.oliver.fancyanalytics.logger.properties.StringProperty;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,8 +90,16 @@ public class ChatRoomImpl implements ChatRoom {
             return;
         }
 
-        String parsedMessage = FancyCore.get().getPlaceholderService().parse(sender, message);
-        parsedMessage = parsedMessage.replace("%message%", message);
+        String parsedMessage = FancyCorePlugin.get().getConfig().getChatFormat()
+                .replace("%message%", message);
+        parsedMessage = FancyCore.get().getPlaceholderService().parse(sender, parsedMessage);
+
+        FancyCorePlugin.get().getFancyLogger().info(
+                "Player " + sender.getData().getUsername() + " sent message in chat room " + name + ": " + message,
+                StringProperty.of("player", sender.getData().getUUID().toString()),
+                StringProperty.of("chat_room", name),
+                StringProperty.of("message", message)
+        );
 
         if (!new PlayerSentMessageEvent(sender, this, message, parsedMessage).fire()) {
             return;

@@ -113,6 +113,8 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
                         String.class
                 )
         );
+
+        config.reload();
     }
 
     @Override

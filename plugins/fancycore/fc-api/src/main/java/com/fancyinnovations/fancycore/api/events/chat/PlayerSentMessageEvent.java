@@ -1,8 +1,11 @@
 package com.fancyinnovations.fancycore.api.events.chat;
 
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
+import com.fancyinnovations.fancycore.api.discord.Message;
 import com.fancyinnovations.fancycore.api.events.player.PlayerEvent;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+
+import java.util.List;
 
 /**
  * Event fired when a player sends a message in a chat room.
@@ -45,5 +48,15 @@ public class PlayerSentMessageEvent extends PlayerEvent {
      */
     public String getParsedMessage() {
         return parsedMessage;
+    }
+
+    @Override
+    public Message getDiscordMessage() {
+        // TODO (I18N): make text translatable
+
+        return new Message(
+                player.getData().getUsername() + ": " + rawMessage,
+                List.of()
+        );
     }
 }

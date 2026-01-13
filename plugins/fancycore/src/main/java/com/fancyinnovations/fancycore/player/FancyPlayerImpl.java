@@ -126,7 +126,7 @@ public class FancyPlayerImpl implements FancyPlayer {
 
     @Override
     public void sendMessage(String message) {
-        player.sendMessage(Message.parse(message));
+        player.sendMessage(Message.raw(message));
     }
 
     @Override
