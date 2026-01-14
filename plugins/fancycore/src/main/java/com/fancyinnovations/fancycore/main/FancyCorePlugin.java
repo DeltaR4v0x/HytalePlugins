@@ -45,6 +45,8 @@ import com.fancyinnovations.fancycore.player.service.FancyPlayerServiceImpl;
 import com.fancyinnovations.fancycore.player.storage.SavePlayersRunnable;
 import com.fancyinnovations.fancycore.player.storage.json.FancyPlayerJsonStorage;
 import com.fancyinnovations.fancycore.teleport.service.TeleportRequestServiceImpl;
+import com.fancyinnovations.fancycore.teleport.storage.SpawnLocationStorage;
+import com.fancyinnovations.fancycore.teleport.storage.WarpStorage;
 import com.fancyinnovations.fancycore.translations.TranslationService;
 import com.fancyinnovations.versionchecker.FancySpacesVersionFetcher;
 import com.fancyinnovations.versionchecker.VersionChecker;
@@ -62,6 +64,7 @@ import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
+import de.oliver.fancyanalytics.logger.properties.ThrowableProperty;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -69,8 +72,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Function;
 
 public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
@@ -109,6 +114,8 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
     private ChatService chatService;
 
     private com.fancyinnovations.fancycore.api.teleport.TeleportRequestService teleportRequestService;
+    private SpawnLocationStorage spawnLocationStorage;
+    private WarpStorage warpStorage;
 
     public FancyCorePlugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -180,6 +187,8 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         chatService = new ChatServiceImpl();
 
         teleportRequestService = new TeleportRequestServiceImpl();
+        spawnLocationStorage = new SpawnLocationStorage();
+        warpStorage = new WarpStorage();
 
         SeedDefaultData.seed();
 
@@ -267,6 +276,16 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new TeleportBackCMD());
         CommandManager.get().register(new TeleportDeathBackCMD());
         CommandManager.get().register(new SwitchWorldCMD());
+        CommandManager.get().register(new SetSpawnCMD());
+        CommandManager.get().register(new SpawnCMD());
+        CommandManager.get().register(new SetHomeCMD());
+        CommandManager.get().register(new DeleteHomeCMD());
+        CommandManager.get().register(new HomeCMD());
+        CommandManager.get().register(new ListHomesCMD());
+        CommandManager.get().register(new CreateWarpCMD());
+        CommandManager.get().register(new DeleteWarpCMD());
+        CommandManager.get().register(new WarpCMD());
+        CommandManager.get().register(new ListWarpsCMD());
 
         // player
         CommandManager.get().register(new PlayerListCMD());
@@ -283,13 +302,16 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         eventRegistry.registerGlobal(AddPlayerToWorldEvent.class, PlayerJoinListener::onAddPlayerToWorld);
         eventRegistry.registerGlobal(PlayerDisconnectEvent.class, PlayerLeaveListener::onPlayerLeave);
 
-        // TODO fix this stupid async event handling
-        eventRegistry.registerAsyncGlobal(PlayerChatEvent.class, future ->
+        Function<CompletableFuture<PlayerChatEvent>, CompletableFuture<PlayerChatEvent>> handler = future ->
                 future.thenApply(event -> {
-                    PlayerChatListener.onPlayerChat(event);
+                    try {
+                        PlayerChatListener.onPlayerChat(event);
+                    } catch (Exception e) {
+                        fancyLogger.error("Error handling player chat event", ThrowableProperty.of(e));
+                    }
                     return event;
-                })
-        );
+                });
+        eventRegistry.registerAsyncGlobal(PlayerChatEvent.class, handler);
     }
 
     @Override
@@ -382,5 +404,13 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
     @Override
     public com.fancyinnovations.fancycore.api.teleport.TeleportRequestService getTeleportRequestService() {
         return teleportRequestService;
+    }
+
+    public SpawnLocationStorage getSpawnLocationStorage() {
+        return spawnLocationStorage;
+    }
+
+    public WarpStorage getWarpStorage() {
+        return warpStorage;
     }
 }
