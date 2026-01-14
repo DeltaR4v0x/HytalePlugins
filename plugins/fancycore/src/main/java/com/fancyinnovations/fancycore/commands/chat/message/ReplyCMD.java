@@ -46,6 +46,11 @@ public class ReplyCMD extends CommandBase {
             return;
         }
 
+        if (!receiver.getData().isPrivateMessagesEnabled()) {
+            ctx.sendMessage(Message.raw("The player " + receiver.getData().getUsername() + " is not accepting private messages."));
+            return;
+        }
+
         if (receiver.getData().getIgnoredPlayers().contains(sender.getData().getUUID())) {
             ctx.sendMessage(Message.raw("You cannot send a private message to " + receiver.getData().getUsername() + " because they are ignoring you."));
             return;
