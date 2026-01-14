@@ -19,16 +19,20 @@ public class FancyPlayerImpl implements FancyPlayer {
     private PlayerRef player;
     private long joinedAt;
     private ChatRoom currentChatRoom;
+    private FancyPlayer replyTo;
 
     public FancyPlayerImpl(FancyPlayerData data) {
         this.data = data;
         this.player = null;
+        this.joinedAt = -1;
+        this.replyTo = null;
     }
 
     public FancyPlayerImpl(FancyPlayerData data, PlayerRef player) {
         this.data = data;
         this.player = player;
         this.joinedAt = -1;
+        this.replyTo = null;
 
         this.data.setUUID(player.getUuid());
         this.data.setUsername(data.getUsername());
@@ -159,5 +163,15 @@ public class FancyPlayerImpl implements FancyPlayer {
         }
 
         this.currentChatRoom = room;
+    }
+
+    @Override
+    public FancyPlayer getReplyTo() {
+        return replyTo;
+    }
+
+    @Override
+    public void setReplyTo(FancyPlayer player) {
+        this.replyTo = player;
     }
 }

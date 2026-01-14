@@ -91,4 +91,18 @@ public interface FancyPlayer {
      * @param room the chat room to switch to.
      */
     void switchChatRoom(ChatRoom room);
+
+    /**
+     * Gets the player to whom this player last replied.
+     *
+     * @return the player to whom this player last replied.
+     */
+    FancyPlayer getReplyTo();
+
+    /**
+     * Sets the player to whom this player last replied.
+     *
+     * @param player the player to whom this player last replied.
+     */
+    void setReplyTo(FancyPlayer player);
 }

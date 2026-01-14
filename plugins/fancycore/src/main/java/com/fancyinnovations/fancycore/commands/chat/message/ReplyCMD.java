@@ -4,7 +4,6 @@ import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.events.chat.PrivateMessageSentEvent;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -14,14 +13,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MessageCMD extends CommandBase {
+public class ReplyCMD extends CommandBase {
 
-    protected final RequiredArg<FancyPlayer> receiverArg = this.withRequiredArg("receiver", "The player to send the message to", FancyPlayerArg.TYPE);
     protected final RequiredArg<List<String>> messageArg = this.withListRequiredArg("message", "The message to send", ArgTypes.STRING);
 
-    public MessageCMD() {
-        super("message", "Send a private message to another player");
-        addAliases("msg");
+    public ReplyCMD() {
+        super("reply", "Reply to the last player who sent you a private message");
+        addAliases("r");
     }
 
     @Override
@@ -38,14 +36,13 @@ public class MessageCMD extends CommandBase {
         }
 
 
-        FancyPlayer receiver = receiverArg.get(ctx);
-        if (!receiver.isOnline()) {
-            ctx.sendMessage(Message.raw("The player " + receiver.getData().getUsername() + " is not online."));
+        FancyPlayer receiver = sender.getReplyTo();
+        if (receiver == null) {
+            ctx.sendMessage(Message.raw("You have no one to reply to."));
             return;
         }
-
-        if (receiver.getData().getUUID().equals(sender.getData().getUUID())) {
-            ctx.sendMessage(Message.raw("You cannot send a private message to yourself."));
+        if (!receiver.isOnline()) {
+            ctx.sendMessage(Message.raw("The player " + receiver.getData().getUsername() + " is not online."));
             return;
         }
 
