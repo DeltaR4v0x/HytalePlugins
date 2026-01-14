@@ -13,6 +13,7 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
     public static final String PRIMARY_CURRENCY_NAME_PATH = "settings.economy.primary_currency";
     public static final String CHAT_FORMAT_PATH = "settings.chat.format";
     public static final String DEFAULT_CHATROOM_PATH = "settings.chat.default_chatroom";
+    public static final String PRIVATE_MESSAGES_FORMAT_PATH = "settings.chat.private_messages_format";
     public static final String JOIN_MESSAGE_PATH = "settings.join_message";
     public static final String FIRST_JOIN_MESSAGE_PATH = "settings.first_join_message";
     public static final String LEAVE_MESSAGE_PATH = "settings.leave_message";
@@ -76,6 +77,17 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
                         "The name of the default chatroom players join upon connecting.",
                         false,
                         "global",
+                        false,
+                        String.class
+                )
+        );
+
+        config.addField(
+                new ConfigField<>(
+                        PRIVATE_MESSAGES_FORMAT_PATH,
+                        "The format for private messages between players.",
+                        false,
+                        "<%sender% -> %receiver%>: %message%",
                         false,
                         String.class
                 )
@@ -150,6 +162,11 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
     @Override
     public String getDefaultChatroom() {
         return config.get(DEFAULT_CHATROOM_PATH);
+    }
+
+    @Override
+    public String getPrivateMessageFormat() {
+        return config.get(PRIVATE_MESSAGES_FORMAT_PATH);
     }
 
     @Override

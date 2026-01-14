@@ -14,6 +14,8 @@ public interface FancyCoreConfig {
 
     String getDefaultChatroom();
 
+    String getPrivateMessageFormat();
+
     String getJoinMessage();
 
     String getFirstJoinMessage();
