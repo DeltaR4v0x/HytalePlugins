@@ -2,6 +2,7 @@ package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+import com.fancyinnovations.fancycore.api.player.FancyPlayerData;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
@@ -41,6 +42,9 @@ public class GroupMembersClearCMD extends CommandBase {
         Group group = groupArg.get(ctx);
 
         group.clearMembers();
+        for (FancyPlayerData player : FancyCorePlugin.get().getPlayerStorage().loadAllPlayers()) {
+            player.removeGroup(group.getName());
+        }
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 

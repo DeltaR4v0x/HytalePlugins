@@ -29,6 +29,8 @@ public interface Group {
 
     void setPermission(String permission, boolean enabled);
 
+    void removePermission(String permission);
+
     List<UUID> getMembers();
 
     void addMember(UUID memberUUID);

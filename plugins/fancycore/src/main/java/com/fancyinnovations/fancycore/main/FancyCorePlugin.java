@@ -35,6 +35,7 @@ import com.fancyinnovations.fancycore.listeners.PlayerLeaveListener;
 import com.fancyinnovations.fancycore.metrics.PluginMetrics;
 import com.fancyinnovations.fancycore.moderation.service.PunishmentServiceImpl;
 import com.fancyinnovations.fancycore.moderation.storage.json.PunishmentJsonStorage;
+import com.fancyinnovations.fancycore.permissions.FancyCorePermissionProvider;
 import com.fancyinnovations.fancycore.permissions.service.PermissionServiceImpl;
 import com.fancyinnovations.fancycore.permissions.storage.json.PermissionJsonStorage;
 import com.fancyinnovations.fancycore.placeholders.PlaceholderServiceImpl;
@@ -52,6 +53,8 @@ import com.google.gson.Gson;
 import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.event.events.player.*;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
+import com.hypixel.hytale.server.core.permissions.provider.PermissionProvider;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
@@ -63,6 +66,7 @@ import de.oliver.fancyanalytics.logger.appender.JsonAppender;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -215,6 +219,12 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         // register commands and listeners
         registerCommands();
         registerListeners();
+
+        // register permission provider
+        for (PermissionProvider permissionProvider : new ArrayList<>(PermissionsModule.get().getProviders())) {
+            PermissionsModule.get().removeProvider(permissionProvider);
+        }
+        PermissionsModule.get().addProvider(new FancyCorePermissionProvider());
 
         new ServerStartedEvent().fire();
 

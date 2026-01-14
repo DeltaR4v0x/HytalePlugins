@@ -49,6 +49,7 @@ public class GroupMembersAddCMD extends CommandBase {
         }
 
         group.addMember(target.getData().getUUID());
+        fp.getData().addGroup(group.getName());
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 

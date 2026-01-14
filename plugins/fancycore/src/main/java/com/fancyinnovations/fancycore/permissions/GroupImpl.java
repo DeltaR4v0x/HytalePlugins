@@ -121,6 +121,11 @@ public class GroupImpl implements Group {
     }
 
     @Override
+    public void removePermission(String permission) {
+        this.permissions.removeIf(perm -> perm.getPermission().equalsIgnoreCase(permission));
+    }
+
+    @Override
     public List<UUID> getMembers() {
         return List.copyOf(members);
     }

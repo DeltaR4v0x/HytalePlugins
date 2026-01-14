@@ -49,6 +49,7 @@ public class GroupMembersRemoveCMD extends CommandBase {
         }
 
         group.removeMember(target.getData().getUUID());
+        fp.getData().removeGroup(group.getName());
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 
