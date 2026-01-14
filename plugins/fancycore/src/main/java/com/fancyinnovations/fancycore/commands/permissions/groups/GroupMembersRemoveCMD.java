@@ -1,22 +1,24 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
-import com.fancyinnovations.fancycore.api.permissions.Permission;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-public class GroupPermissionsListCMD extends CommandBase {
+public class GroupMembersRemoveCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
+    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg(FancyPlayerArg.NAME, FancyPlayerArg.DESCRIPTION, FancyPlayerArg.TYPE);
 
-    protected GroupPermissionsListCMD() {
-        super("list", "Lists permissions of a player group");
-        requirePermission("fancycore.commands.groups.permissions.list");
+    protected GroupMembersRemoveCMD() {
+        super("remove", "Removes a member to a player group");
+        requirePermission("fancycore.commands.groups.members.remove");
     }
 
     @Override
@@ -39,15 +41,17 @@ public class GroupPermissionsListCMD extends CommandBase {
 //        }
 
         Group group = groupArg.get(ctx);
+        FancyPlayer target = targetArg.get(ctx);
 
-        fp.sendMessage("Permissions for group " + group.getName() + ":");
-        if (group.getPermissions().isEmpty()) {
-            fp.sendMessage("  No permissions assigned.");
+        if (!group.getMembers().contains(target.getData().getUUID())) {
+            fp.sendMessage("Player " + target.getData().getUsername() + " is not a member of group " + group.getName() + ".");
             return;
         }
 
-        for (Permission perm : group.getPermissions()) {
-            fp.sendMessage("  - " + perm.getPermission() + "(enabled: " + perm.isEnabled() + ")");
-        }
+        group.getMembers().remove(target.getData().getUUID());
+
+        FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
+
+        fp.sendMessage("Player " + target.getData().getUsername() + " has been removed from group " + group.getName() + ".");
     }
 }

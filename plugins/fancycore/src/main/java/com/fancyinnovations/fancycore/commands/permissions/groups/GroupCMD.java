@@ -1,4 +1,4 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractCommandCollection;
 
@@ -18,5 +18,4 @@ public class GroupCMD extends AbstractCommandCollection {
         addSubCommand(new GroupPermissionsCMD());
         addSubCommand(new GroupMembersCMD());
     }
-
 }

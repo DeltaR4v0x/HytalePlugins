@@ -1,24 +1,26 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-public class GroupMembersAddCMD extends CommandBase {
+public class GroupPermissionsSetCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
-    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg(FancyPlayerArg.NAME, FancyPlayerArg.DESCRIPTION, FancyPlayerArg.TYPE);
+    protected final RequiredArg<String> permissionArg = this.withRequiredArg("permission", "the permission string to set", ArgTypes.STRING);
+    protected final OptionalArg<Boolean> enabledArg = this.withOptionalArg("enabled", "whether the permission should be explicitly enabled or disabled", ArgTypes.BOOLEAN);
 
-    protected GroupMembersAddCMD() {
-        super("add", "Adds a member to a player group");
-        requirePermission("fancycore.commands.groups.members.add");
+    protected GroupPermissionsSetCMD() {
+        super("set", "Sets a permission for a group");
+        requirePermission("fancycore.commands.groups.permissions.set");
     }
 
     @Override
@@ -41,17 +43,13 @@ public class GroupMembersAddCMD extends CommandBase {
 //        }
 
         Group group = groupArg.get(ctx);
-        FancyPlayer target = targetArg.get(ctx);
+        String permission = permissionArg.get(ctx);
+        boolean enabled = enabledArg.provided(ctx) ? enabledArg.get(ctx) : true;
 
-        if (group.getMembers().contains(target.getData().getUUID())) {
-            fp.sendMessage("Player " + target.getData().getUsername() + " is already a member of group " + group.getName() + ".");
-            return;
-        }
-
-        group.getMembers().add(target.getData().getUUID());
+        group.setPermission(permission, enabled);
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 
-        fp.sendMessage("Player " + target.getData().getUsername() + " has been added to group " + group.getName() + ".");
+        fp.sendMessage("Set permission " + permission + " to " + enabled + " for group " + group.getName() + ".");
     }
 }

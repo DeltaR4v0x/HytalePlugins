@@ -1,4 +1,4 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
@@ -7,18 +7,18 @@ import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
-public class GroupPermissionsClearCMD extends CommandBase {
+public class GroupSetPrefixCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
+    protected final RequiredArg<String> prefixArg = this.withRequiredArg("prefix", "the new prefix for the group", ArgTypes.STRING);
 
-    protected GroupPermissionsClearCMD() {
-        super("clear", "Clears the permissions for a group");
-        requirePermission("fancycore.commands.groups.permissions.clear");
+    protected GroupSetPrefixCMD() {
+        super("setprefix", "Sets a group's prefix");
+        requirePermission("fancycore.commands.groups.setprefix");
     }
 
     @Override
@@ -41,11 +41,18 @@ public class GroupPermissionsClearCMD extends CommandBase {
 //        }
 
         Group group = groupArg.get(ctx);
+        String prefix = prefixArg.get(ctx);
+        if (prefix.startsWith("\"")) {
+            prefix = prefix.substring(1);
+        }
+        if (prefix.endsWith("\"")) {
+            prefix = prefix.substring(0, prefix.length() - 1);
+        }
 
-        group.setPermissions(new ArrayList<>());
+        group.setPrefix(prefix);
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 
-        fp.sendMessage("Cleared all permissions for group " + group.getName() + ".");
+        fp.sendMessage("Set prefix of group " + group.getName() + " to " + prefix + ".");
     }
 }

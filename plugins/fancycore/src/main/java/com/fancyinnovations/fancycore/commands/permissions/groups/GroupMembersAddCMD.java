@@ -1,24 +1,24 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
-import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-public class GroupSetSuffixCMD extends CommandBase {
+public class GroupMembersAddCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
-    protected final RequiredArg<String> suffixArg = this.withRequiredArg("suffix", "the new suffix for the group", ArgTypes.STRING);
+    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg(FancyPlayerArg.NAME, FancyPlayerArg.DESCRIPTION, FancyPlayerArg.TYPE);
 
-    protected GroupSetSuffixCMD() {
-        super("setsuffix", "Sets a group's suffix");
-        requirePermission("fancycore.commands.groups.setsuffix");
+    protected GroupMembersAddCMD() {
+        super("add", "Adds a member to a player group");
+        requirePermission("fancycore.commands.groups.members.add");
     }
 
     @Override
@@ -41,18 +41,17 @@ public class GroupSetSuffixCMD extends CommandBase {
 //        }
 
         Group group = groupArg.get(ctx);
-        String suffix = suffixArg.get(ctx);
-        if (suffix.startsWith("\"")) {
-            suffix = suffix.substring(1);
-        }
-        if (suffix.endsWith("\"")) {
-            suffix = suffix.substring(0, suffix.length() - 1);
+        FancyPlayer target = targetArg.get(ctx);
+
+        if (group.getMembers().contains(target.getData().getUUID())) {
+            fp.sendMessage("Player " + target.getData().getUsername() + " is already a member of group " + group.getName() + ".");
+            return;
         }
 
-        group.setSuffix(suffix);
+        group.getMembers().add(target.getData().getUUID());
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 
-        fp.sendMessage("Set suffix of group " + group.getName() + " to " + suffix + ".");
+        fp.sendMessage("Player " + target.getData().getUsername() + " has been added to group " + group.getName() + ".");
     }
 }

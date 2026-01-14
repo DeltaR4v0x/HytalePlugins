@@ -1,4 +1,4 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
@@ -6,21 +6,19 @@ import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
-import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-public class GroupPermissionsSetCMD extends CommandBase {
+public class GroupPermissionsRemoveCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
-    protected final RequiredArg<String> permissionArg = this.withRequiredArg("permission", "the permission string to set", ArgTypes.STRING);
-    protected final OptionalArg<Boolean> enabledArg = this.withOptionalArg("enabled", "whether the permission should be explicitly enabled or disabled", ArgTypes.BOOLEAN);
+    protected final RequiredArg<String> permissionArg = this.withRequiredArg("permission", "the permission string to remove", ArgTypes.STRING);
 
-    protected GroupPermissionsSetCMD() {
-        super("set", "Sets a permission for a group");
-        requirePermission("fancycore.commands.groups.permissions.set");
+    protected GroupPermissionsRemoveCMD() {
+        super("remove", "Removes a permission from a group");
+        requirePermission("fancycore.commands.groups.permissions.remove");
     }
 
     @Override
@@ -44,12 +42,11 @@ public class GroupPermissionsSetCMD extends CommandBase {
 
         Group group = groupArg.get(ctx);
         String permission = permissionArg.get(ctx);
-        boolean enabled = enabledArg.provided(ctx) ? enabledArg.get(ctx) : true;
 
-        group.setPermission(permission, enabled);
+        group.getPermissions().removeIf(perm -> perm.getPermission().equalsIgnoreCase(permission));
 
         FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
 
-        fp.sendMessage("Set permission " + permission + " to " + enabled + " for group " + group.getName() + ".");
+        fp.sendMessage("Removed permission " + permission + " from group " + group.getName() + ".");
     }
 }

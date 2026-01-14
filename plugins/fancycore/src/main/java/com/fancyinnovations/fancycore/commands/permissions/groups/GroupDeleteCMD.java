@@ -1,24 +1,22 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
+import com.fancyinnovations.fancycore.api.permissions.PermissionService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
-import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-public class GroupPermissionsRemoveCMD extends CommandBase {
+public class GroupDeleteCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
-    protected final RequiredArg<String> permissionArg = this.withRequiredArg("permission", "the permission string to remove", ArgTypes.STRING);
 
-    protected GroupPermissionsRemoveCMD() {
-        super("remove", "Removes a permission from a group");
-        requirePermission("fancycore.commands.groups.permissions.remove");
+    protected GroupDeleteCMD() {
+        super("delete", "Deletes a group");
+        requirePermission("fancycore.commands.groups.delete");
     }
 
     @Override
@@ -41,12 +39,9 @@ public class GroupPermissionsRemoveCMD extends CommandBase {
 //        }
 
         Group group = groupArg.get(ctx);
-        String permission = permissionArg.get(ctx);
 
-        group.getPermissions().removeIf(perm -> perm.getPermission().equalsIgnoreCase(permission));
+        PermissionService.get().removeGroup(group.getName());
 
-        FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
-
-        fp.sendMessage("Removed permission " + permission + " from group " + group.getName() + ".");
+        fp.sendMessage("Group " + group.getName() + " has been deleted.");
     }
 }

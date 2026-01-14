@@ -1,24 +1,22 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
+import com.fancyinnovations.fancycore.api.permissions.Permission;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
-import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-public class GroupSetPrefixCMD extends CommandBase {
+public class GroupPermissionsListCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
-    protected final RequiredArg<String> prefixArg = this.withRequiredArg("prefix", "the new prefix for the group", ArgTypes.STRING);
 
-    protected GroupSetPrefixCMD() {
-        super("setprefix", "Sets a group's prefix");
-        requirePermission("fancycore.commands.groups.setprefix");
+    protected GroupPermissionsListCMD() {
+        super("list", "Lists permissions of a player group");
+        requirePermission("fancycore.commands.groups.permissions.list");
     }
 
     @Override
@@ -41,18 +39,15 @@ public class GroupSetPrefixCMD extends CommandBase {
 //        }
 
         Group group = groupArg.get(ctx);
-        String prefix = prefixArg.get(ctx);
-        if (prefix.startsWith("\"")) {
-            prefix = prefix.substring(1);
+
+        fp.sendMessage("Permissions for group " + group.getName() + ":");
+        if (group.getPermissions().isEmpty()) {
+            fp.sendMessage("  No permissions assigned.");
+            return;
         }
-        if (prefix.endsWith("\"")) {
-            prefix = prefix.substring(0, prefix.length() - 1);
+
+        for (Permission perm : group.getPermissions()) {
+            fp.sendMessage("  - " + perm.getPermission() + "(enabled: " + perm.isEnabled() + ")");
         }
-
-        group.setPrefix(prefix);
-
-        FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
-
-        fp.sendMessage("Set prefix of group " + group.getName() + " to " + prefix + ".");
     }
 }

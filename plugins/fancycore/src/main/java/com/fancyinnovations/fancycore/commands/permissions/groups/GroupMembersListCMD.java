@@ -1,24 +1,23 @@
-package com.fancyinnovations.fancycore.commands.permissions;
+package com.fancyinnovations.fancycore.commands.permissions.groups;
 
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.UUID;
 
-public class GroupMembersClearCMD extends CommandBase {
+public class GroupMembersListCMD extends CommandBase {
 
     protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
 
-    protected GroupMembersClearCMD() {
-        super("clear", "Clears the members of a player group");
-        requirePermission("fancycore.commands.groups.members.clear");
+    protected GroupMembersListCMD() {
+        super("list", "Lists members of a player group");
+        requirePermission("fancycore.commands.groups.members.list");
     }
 
     @Override
@@ -42,10 +41,19 @@ public class GroupMembersClearCMD extends CommandBase {
 
         Group group = groupArg.get(ctx);
 
-        group.setMembers(new ArrayList<>());
+        fp.sendMessage("Members of group " + group.getName() + ":");
+        if (group.getMembers().isEmpty()) {
+            fp.sendMessage("  No members found.");
+            return;
+        }
 
-        FancyCorePlugin.get().getPermissionStorage().storeGroup(group);
-
-        fp.sendMessage("Cleared all members of group " + group.getName() + ".");
+        for (UUID memberUUID : group.getMembers()) {
+            FancyPlayer memberFP = FancyPlayerService.get().getByUUID(memberUUID);
+            if (memberFP != null) {
+                fp.sendMessage("  - " + memberFP.getData().getUsername() + " (UUID: " + memberUUID + ")");
+            } else {
+                fp.sendMessage("  - Unknown Player (UUID: " + memberUUID + ")");
+            }
+        }
     }
 }
