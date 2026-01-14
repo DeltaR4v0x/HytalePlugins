@@ -12,16 +12,15 @@ import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class MessageCMD extends CommandBase {
 
     protected final RequiredArg<FancyPlayer> receiverArg = this.withRequiredArg("receiver", "The player to send the message to", FancyPlayerArg.TYPE);
-    protected final RequiredArg<List<String>> messageArg = this.withListRequiredArg("message", "The message to send", ArgTypes.STRING);
+    protected final RequiredArg<String> messageArg = this.withRequiredArg("message", "The message to send", ArgTypes.STRING);
 
     public MessageCMD() {
         super("message", "Send a private message to another player");
         addAliases("msg", "dm");
+        setAllowsExtraArguments(true);
     }
 
     @Override
@@ -44,10 +43,10 @@ public class MessageCMD extends CommandBase {
             return;
         }
 
-        if (receiver.getData().getUUID().equals(sender.getData().getUUID())) {
-            ctx.sendMessage(Message.raw("You cannot send a private message to yourself."));
-            return;
-        }
+//        if (receiver.getData().getUUID().equals(sender.getData().getUUID())) {
+//            ctx.sendMessage(Message.raw("You cannot send a private message to yourself."));
+//            return;
+//        }
 
         if (!receiver.getData().isPrivateMessagesEnabled()) {
             ctx.sendMessage(Message.raw("The player " + receiver.getData().getUsername() + " is not accepting private messages."));
@@ -59,7 +58,15 @@ public class MessageCMD extends CommandBase {
             return;
         }
 
-        String message = String.join(" ", messageArg.get(ctx));
+        String[] parts = ctx.getInputString().split(" ");
+        StringBuilder messageBuilder = new StringBuilder();
+        for (int i = 2; i < parts.length; i++) {
+            messageBuilder.append(parts[i]);
+            if (i < parts.length - 1) {
+                messageBuilder.append(" ");
+            }
+        }
+        String message = messageBuilder.toString();
 
         if (!new PrivateMessageSentEvent(sender, receiver, message).fire()) {
             return;

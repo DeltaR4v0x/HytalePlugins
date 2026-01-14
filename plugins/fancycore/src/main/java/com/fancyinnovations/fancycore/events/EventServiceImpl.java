@@ -1,6 +1,7 @@
 package com.fancyinnovations.fancycore.events;
 
 import com.fancyinnovations.fancycore.api.FancyCoreConfig;
+import com.fancyinnovations.fancycore.api.discord.Message;
 import com.fancyinnovations.fancycore.api.events.FancyEvent;
 import com.fancyinnovations.fancycore.api.events.service.EventListener;
 import com.fancyinnovations.fancycore.api.events.service.EventService;
@@ -27,7 +28,11 @@ public class EventServiceImpl implements EventService {
         if (!CONFIG.getEventDiscordWebhookUrl().isEmpty()) {
             for (String evt : CONFIG.getEventDiscordNotifications()) {
                 if (event.getClass().getSimpleName().equalsIgnoreCase(evt)) {
-                    DiscordWebhook.sendMsg(CONFIG.getEventDiscordWebhookUrl(), event.getDiscordMessage());
+                    Message discordMessage = event.getDiscordMessage();
+                    if (discordMessage != null) {
+                        DiscordWebhook.sendMsg(CONFIG.getEventDiscordWebhookUrl(), discordMessage);
+                    }
+
                     break;
                 }
             }

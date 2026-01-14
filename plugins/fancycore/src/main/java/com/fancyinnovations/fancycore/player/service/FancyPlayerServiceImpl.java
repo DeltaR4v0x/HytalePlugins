@@ -89,18 +89,27 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
     }
 
     public FancyPlayer tryToGetFromStorage(String username) {
-        try {
-            FancyPlayerData data = storage.loadPlayerByUsername(username);
-            if (data == null) {
-                return null;
+        for (FancyPlayerData allPlayer : storage.loadAllPlayers()) {
+            if (allPlayer.getUsername().equalsIgnoreCase(username)) {
+                FancyPlayer fancyPlayer = new FancyPlayerImpl(allPlayer);
+                addPlayerToCache(fancyPlayer);
+                return fancyPlayer;
             }
-
-            FancyPlayer fancyPlayer = new FancyPlayerImpl(data);
-            addPlayerToCache(fancyPlayer);
-            return fancyPlayer;
-        } catch (Exception e) {
-            return null;
         }
+        return null;
+
+//        try {
+//            FancyPlayerData data = storage.loadPlayerByUsername(username);
+//            if (data == null) {
+//                return null;
+//            }
+//
+//            FancyPlayer fancyPlayer = new FancyPlayerImpl(data);
+//            addPlayerToCache(fancyPlayer);
+//            return fancyPlayer;
+//        } catch (Exception e) {
+//            return null;
+//        }
     }
 
     public void removePlayerFromCache(UUID uuid) {

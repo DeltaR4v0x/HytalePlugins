@@ -1,5 +1,6 @@
 package com.fancyinnovations.fancycore.api.events.chat;
 
+import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.discord.Message;
 import com.fancyinnovations.fancycore.api.events.player.PlayerEvent;
@@ -53,6 +54,10 @@ public class PlayerSentMessageEvent extends PlayerEvent {
     @Override
     public Message getDiscordMessage() {
         // TODO (I18N): make text translatable
+
+        if (!chatRoom.getName().equals(FancyCore.get().getConfig().getDefaultChatroom())) {
+            return null;
+        }
 
         return new Message(
                 player.getData().getUsername() + ": " + rawMessage,
