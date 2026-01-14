@@ -21,8 +21,8 @@ import com.fancyinnovations.fancycore.chat.storage.json.ChatJsonStorage;
 import com.fancyinnovations.fancycore.commands.chat.chatroom.ChatRoomCMD;
 import com.fancyinnovations.fancycore.commands.chat.message.*;
 import com.fancyinnovations.fancycore.commands.fancycore.FancyCoreCMD;
-import com.fancyinnovations.fancycore.commands.permissions.CheckPermissionCMD;
 import com.fancyinnovations.fancycore.commands.permissions.groups.GroupCMD;
+import com.fancyinnovations.fancycore.commands.permissions.player.PermissionsCMD;
 import com.fancyinnovations.fancycore.commands.player.PlayerListCMD;
 import com.fancyinnovations.fancycore.commands.teleport.*;
 import com.fancyinnovations.fancycore.config.FancyCoreConfigImpl;
@@ -261,8 +261,8 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new PlayerListCMD());
 
         // permission
+        CommandManager.get().register(new PermissionsCMD());
         CommandManager.get().register(new GroupCMD());
-        CommandManager.get().register(new CheckPermissionCMD());
     }
 
     public void registerListeners() {

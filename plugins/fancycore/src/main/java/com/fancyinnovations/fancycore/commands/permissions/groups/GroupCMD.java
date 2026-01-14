@@ -5,7 +5,8 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractComman
 public class GroupCMD extends AbstractCommandCollection {
 
     public GroupCMD() {
-        super("group", "Manages player groups");
+        super("groups", "Manages player groups");
+        addAliases("group");
 
         addSubCommand(new GroupInfoCMD());
         addSubCommand(new GroupListCMD());
