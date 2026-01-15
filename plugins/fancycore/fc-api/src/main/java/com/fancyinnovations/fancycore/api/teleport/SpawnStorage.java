@@ -6,10 +6,10 @@ import org.jetbrains.annotations.ApiStatus;
 public interface SpawnStorage {
 
     @ApiStatus.Internal
-    SpawnLocation loadSpawnLocation();
+    Location loadSpawnLocation();
 
     @ApiStatus.Internal
-    void storeSpawnLocation(SpawnLocation location);
+    void storeSpawnLocation(Location location);
 
     @ApiStatus.Internal
     void deleteSpawnLocation();

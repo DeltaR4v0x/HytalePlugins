@@ -1,6 +1,6 @@
 package com.fancyinnovations.fancycore.teleport.storage.json;
 
-import com.fancyinnovations.fancycore.api.teleport.SpawnLocation;
+import com.fancyinnovations.fancycore.api.teleport.Location;
 import com.fancyinnovations.fancycore.api.teleport.SpawnStorage;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import de.oliver.fancyanalytics.logger.properties.ThrowableProperty;
@@ -20,9 +20,9 @@ public class SpawnJsonStorage implements SpawnStorage {
 
 
     @Override
-    public SpawnLocation loadSpawnLocation() {
+    public Location loadSpawnLocation() {
         try {
-            return db.get(SPAWN_KEY, SpawnLocation.class);
+            return db.get(SPAWN_KEY, Location.class);
         } catch (Exception e) {
             FancyCorePlugin.get().getFancyLogger().error(
                     "Failed to load Spawn Location",
@@ -34,7 +34,7 @@ public class SpawnJsonStorage implements SpawnStorage {
     }
 
     @Override
-    public void storeSpawnLocation(SpawnLocation location) {
+    public void storeSpawnLocation(Location location) {
         try {
             db.set(SPAWN_KEY, location);
         } catch (IOException e) {

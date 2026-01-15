@@ -8,9 +8,9 @@ public interface SpawnService {
         return FancyCore.get().getSpawnService();
     }
 
-    SpawnLocation getSpawnLocation();
+    Location getSpawnLocation();
 
-    void setSpawnLocation(SpawnLocation location);
+    void setSpawnLocation(Location location);
 
     void removeSpawnLocation();
 

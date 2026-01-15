@@ -12,9 +12,7 @@ import com.fancyinnovations.fancycore.api.permissions.PermissionStorage;
 import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerStorage;
-import com.fancyinnovations.fancycore.api.teleport.SpawnService;
-import com.fancyinnovations.fancycore.api.teleport.SpawnStorage;
-import com.fancyinnovations.fancycore.api.teleport.TeleportRequestService;
+import com.fancyinnovations.fancycore.api.teleport.*;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -67,6 +65,11 @@ public interface FancyCore {
 
     @ApiStatus.Internal
     SpawnStorage getSpawnStorage();
+
+    WarpService getWarpService();
+
+    @ApiStatus.Internal
+    WarpStorage getWarpStorage();
 
 
     @ApiStatus.Internal

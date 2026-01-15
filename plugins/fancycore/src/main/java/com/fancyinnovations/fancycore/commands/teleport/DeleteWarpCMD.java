@@ -1,7 +1,7 @@
 package com.fancyinnovations.fancycore.commands.teleport;
 
-import com.fancyinnovations.fancycore.main.FancyCorePlugin;
-import com.fancyinnovations.fancycore.teleport.storage.WarpStorage;
+import com.fancyinnovations.fancycore.api.teleport.Warp;
+import com.fancyinnovations.fancycore.api.teleport.WarpService;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -27,15 +27,14 @@ public class DeleteWarpCMD extends CommandBase {
             return;
         }
 
-        WarpStorage warpStorage = FancyCorePlugin.get().getWarpStorage();
-
-        if (!warpStorage.warpExists(warpName)) {
+        Warp warp = WarpService.get().getWarp(warpName);
+        if (warp == null) {
             ctx.sendMessage(Message.raw("Warp \"" + warpName + "\" does not exist."));
             return;
         }
 
         // Delete warp
-        warpStorage.deleteWarp(warpName);
+        WarpService.get().deleteWarp(warp.name());
 
         // Send success message
         ctx.sendMessage(Message.raw("Warp \"" + warpName + "\" deleted."));

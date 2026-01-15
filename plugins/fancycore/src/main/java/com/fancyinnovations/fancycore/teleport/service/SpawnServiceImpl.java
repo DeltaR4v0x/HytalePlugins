@@ -1,13 +1,13 @@
 package com.fancyinnovations.fancycore.teleport.service;
 
-import com.fancyinnovations.fancycore.api.teleport.SpawnLocation;
+import com.fancyinnovations.fancycore.api.teleport.Location;
 import com.fancyinnovations.fancycore.api.teleport.SpawnService;
 import com.fancyinnovations.fancycore.api.teleport.SpawnStorage;
 
 public class SpawnServiceImpl implements SpawnService {
 
     private final SpawnStorage storage;
-    private SpawnLocation cachedLocation;
+    private Location cachedLocation;
 
     public SpawnServiceImpl(SpawnStorage storage) {
         this.storage = storage;
@@ -16,12 +16,12 @@ public class SpawnServiceImpl implements SpawnService {
     }
 
     @Override
-    public SpawnLocation getSpawnLocation() {
+    public Location getSpawnLocation() {
         return this.cachedLocation;
     }
 
     @Override
-    public void setSpawnLocation(SpawnLocation location) {
+    public void setSpawnLocation(Location location) {
         this.cachedLocation = location;
         this.storage.storeSpawnLocation(location);
     }

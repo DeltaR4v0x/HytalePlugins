@@ -1,23 +1,35 @@
 package com.fancyinnovations.fancycore.commands.teleport;
 
-import com.fancyinnovations.fancycore.api.teleport.SpawnLocation;
+import com.fancyinnovations.fancycore.api.player.FancyPlayer;
+import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.api.teleport.Location;
 import com.fancyinnovations.fancycore.api.teleport.SpawnService;
+import com.fancyinnovations.fancycore.utils.NumberUtils;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
-import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.command.system.arguments.system.DefaultArg;
+import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
+import com.hypixel.hytale.server.core.command.system.arguments.types.RelativeDoublePosition;
+import com.hypixel.hytale.server.core.command.system.basecommands.AbstractWorldCommand;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.WorldConfig;
+import com.hypixel.hytale.server.core.universe.world.spawn.GlobalSpawnProvider;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Method;
+import javax.annotation.Nonnull;
 
-public class SetSpawnCMD extends CommandBase {
+public class SetSpawnCMD extends AbstractWorldCommand {
+
+    private final OptionalArg<RelativeDoublePosition> positionArg = this.withOptionalArg("position", "position to set", ArgTypes.RELATIVE_POSITION);
+    private final DefaultArg<Vector3f> rotationArg = this.withDefaultArg("rotation", "rotation to set", ArgTypes.ROTATION, Vector3f.FORWARD, "forward looking direction");
 
     public SetSpawnCMD() {
         super("setspawn", "Sets the server's spawn point to your current location");
@@ -25,85 +37,51 @@ public class SetSpawnCMD extends CommandBase {
     }
 
     @Override
-    protected void executeSync(@NotNull CommandContext ctx) {
+    protected void execute(@Nonnull CommandContext ctx, @Nonnull World world, @Nonnull Store<EntityStore> store) {
         if (!ctx.isPlayer()) {
             ctx.sendMessage(Message.raw("This command can only be executed by a player."));
             return;
         }
 
-        // Get sender's location
-        Ref<EntityStore> senderRef = ctx.senderAsPlayerRef();
-        if (senderRef == null || !senderRef.isValid()) {
-            ctx.sendMessage(Message.raw("You are not in a world."));
+        FancyPlayer fp = FancyPlayerService.get().getByUUID(ctx.sender().getUuid());
+        if (fp == null) {
+            fp.sendMessage("FancyPlayer not found.");
             return;
         }
+        Ref<EntityStore> playerRef = ctx.senderAsPlayerRef();
 
-        Store<EntityStore> senderStore = senderRef.getStore();
-        World senderWorld = ((EntityStore) senderStore.getExternalData()).getWorld();
+        Vector3d position;
+        if (this.positionArg.provided(ctx)) {
+            RelativeDoublePosition relativePosition = this.positionArg.get(ctx);
+            position = relativePosition.getRelativePosition(ctx, world, store);
+        } else {
+            TransformComponent transformComponent = store.getComponent(playerRef, TransformComponent.getComponentType());
+            position = transformComponent.getPosition().clone();
+        }
 
-        // Execute on the world thread to get location
-        senderWorld.execute(() -> {
-            // Get sender's transform and rotation
-            TransformComponent senderTransformComponent = (TransformComponent) senderStore.getComponent(senderRef, TransformComponent.getComponentType());
-            if (senderTransformComponent == null) {
-                ctx.sendMessage(Message.raw("Failed to get your transform."));
-                return;
-            }
+        Vector3f rotation;
+        if (this.rotationArg.provided(ctx)) {
+            rotation = this.rotationArg.get(ctx);
+        } else  {
+            HeadRotation headRotationComponent = store.getComponent(playerRef, HeadRotation.getComponentType());
+            rotation = headRotationComponent.getRotation();
+        }
 
-            HeadRotation senderHeadRotationComponent = (HeadRotation) senderStore.getComponent(senderRef, HeadRotation.getComponentType());
-            if (senderHeadRotationComponent == null) {
-                ctx.sendMessage(Message.raw("Failed to get your head rotation."));
-                return;
-            }
+        Location spawnLocation = new Location(
+                world.getName(),
+                position.getX(),
+                position.getY(),
+                position.getZ(),
+                rotation.getYaw(),
+                rotation.getPitch()
+        );
+        SpawnService.get().setSpawnLocation(spawnLocation);
 
-            // Save spawn location to our storage
-            SpawnLocation spawnLocation = new SpawnLocation(
-                    senderWorld.getName(),
-                    senderTransformComponent.getPosition().getX(),
-                    senderTransformComponent.getPosition().getY(),
-                    senderTransformComponent.getPosition().getZ(),
-                    senderHeadRotationComponent.getRotation().getYaw(),
-                    senderHeadRotationComponent.getRotation().getPitch()
-            );
-            SpawnService.get().setSpawnLocation(spawnLocation);
+        Transform transform = new Transform(position, rotation);
+        WorldConfig worldConfig = world.getWorldConfig();
+        worldConfig.setSpawnProvider(new GlobalSpawnProvider(transform));
+        worldConfig.markChanged();
 
-            // Set the world's actual spawn point for new players
-            Transform spawnTransform = new Transform(
-                    senderTransformComponent.getPosition().clone(),
-                    senderHeadRotationComponent.getRotation().clone()
-            );
-            
-            // Try to set the world spawn point using reflection (method name may vary)
-            try {
-                // Try common method names
-                Method setSpawnMethod = null;
-                try {
-                    setSpawnMethod = senderWorld.getClass().getMethod("setSpawnPoint", Transform.class);
-                } catch (NoSuchMethodException e1) {
-                    try {
-                        setSpawnMethod = senderWorld.getClass().getMethod("setSpawn", Transform.class);
-                    } catch (NoSuchMethodException e2) {
-                        // Try with Vector3d for position only
-                        try {
-                            setSpawnMethod = senderWorld.getClass().getMethod("setSpawnPoint", Vector3d.class);
-                            setSpawnMethod.invoke(senderWorld, senderTransformComponent.getPosition().clone());
-                        } catch (NoSuchMethodException e3) {
-                            // Method not found, spawn location still saved to our storage
-                        }
-                    }
-                }
-                
-                if (setSpawnMethod != null && setSpawnMethod.getParameterCount() == 1 && 
-                    setSpawnMethod.getParameterTypes()[0] == Transform.class) {
-                    setSpawnMethod.invoke(senderWorld, spawnTransform);
-                }
-            } catch (Exception e) {
-                // If reflection fails, just log a warning - the spawn location is still saved to our storage
-                com.fancyinnovations.fancycore.main.FancyCorePlugin.get().getFancyLogger().warn("Could not set world spawn point. Spawn location saved to plugin storage only.");
-            }
-
-            // Send success message
-            ctx.sendMessage(Message.raw("Spawn location set to your current location."));
-        });
+        fp.sendMessage("Spawn point set to " + NumberUtils.formatNumber(spawnLocation.x()) + ", " + NumberUtils.formatNumber(spawnLocation.y()) + ", " + NumberUtils.formatNumber(spawnLocation.z()) + " in world '" + spawnLocation.worldName() + "'.");
     }
 }

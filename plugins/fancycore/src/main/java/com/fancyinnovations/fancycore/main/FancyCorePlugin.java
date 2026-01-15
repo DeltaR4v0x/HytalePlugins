@@ -16,9 +16,7 @@ import com.fancyinnovations.fancycore.api.permissions.PermissionStorage;
 import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerStorage;
-import com.fancyinnovations.fancycore.api.teleport.SpawnService;
-import com.fancyinnovations.fancycore.api.teleport.SpawnStorage;
-import com.fancyinnovations.fancycore.api.teleport.TeleportRequestService;
+import com.fancyinnovations.fancycore.api.teleport.*;
 import com.fancyinnovations.fancycore.chat.service.ChatServiceImpl;
 import com.fancyinnovations.fancycore.chat.storage.json.ChatJsonStorage;
 import com.fancyinnovations.fancycore.commands.chat.chatroom.ChatRoomCMD;
@@ -54,8 +52,9 @@ import com.fancyinnovations.fancycore.player.storage.SavePlayersRunnable;
 import com.fancyinnovations.fancycore.player.storage.json.FancyPlayerJsonStorage;
 import com.fancyinnovations.fancycore.teleport.service.SpawnServiceImpl;
 import com.fancyinnovations.fancycore.teleport.service.TeleportRequestServiceImpl;
-import com.fancyinnovations.fancycore.teleport.storage.WarpStorage;
+import com.fancyinnovations.fancycore.teleport.service.WarpServiceImpl;
 import com.fancyinnovations.fancycore.teleport.storage.json.SpawnJsonStorage;
+import com.fancyinnovations.fancycore.teleport.storage.json.WarpJsonStorage;
 import com.fancyinnovations.fancycore.translations.TranslationService;
 import com.fancyinnovations.versionchecker.FancySpacesVersionFetcher;
 import com.fancyinnovations.versionchecker.VersionChecker;
@@ -125,8 +124,9 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
     private TeleportRequestService teleportRequestService;
     private SpawnStorage spawnStorage;
     private SpawnService spawnService;
-
     private WarpStorage warpStorage;
+    private WarpService warpService;
+
     private KitStorage kitStorage;
 
     public FancyCorePlugin(@Nonnull JavaPluginInit init) {
@@ -201,8 +201,10 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         teleportRequestService = new TeleportRequestServiceImpl();
         spawnStorage = new SpawnJsonStorage();
         spawnService = new SpawnServiceImpl(spawnStorage);
+        warpStorage = new WarpJsonStorage();
+        warpService = new WarpServiceImpl(warpStorage);
 
-        warpStorage = new WarpStorage();
+        warpStorage = new WarpJsonStorage();
         kitStorage = new KitStorage();
 
         SeedDefaultData.seed();
@@ -437,6 +439,12 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         return spawnStorage;
     }
 
+    @Override
+    public WarpService getWarpService() {
+        return warpService;
+    }
+
+    @Override
     public WarpStorage getWarpStorage() {
         return warpStorage;
     }

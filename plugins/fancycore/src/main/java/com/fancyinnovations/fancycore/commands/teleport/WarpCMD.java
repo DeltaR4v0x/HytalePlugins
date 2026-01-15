@@ -2,28 +2,26 @@ package com.fancyinnovations.fancycore.commands.teleport;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.api.teleport.Warp;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Transform;
-import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
-import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
-import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+import javax.annotation.Nonnull;
 
-public class WarpCMD extends CommandBase {
+public class WarpCMD extends AbstractPlayerCommand {
 
-    protected final RequiredArg<String> nameArg = this.withRequiredArg("warp", "the name of the warp", ArgTypes.STRING);
+    protected final RequiredArg<Warp> warpArg = this.withRequiredArg("warp", "the name of the warp", WarpArg.TYPE);
 
     public WarpCMD() {
         super("warp", "Teleports you to the warp point with the specified name");
@@ -31,7 +29,7 @@ public class WarpCMD extends CommandBase {
     }
 
     @Override
-    protected void executeSync(@NotNull CommandContext ctx) {
+    protected void execute(@Nonnull CommandContext ctx, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
         if (!ctx.isPlayer()) {
             ctx.sendMessage(Message.raw("This command can only be executed by a player."));
             return;
@@ -43,79 +41,16 @@ public class WarpCMD extends CommandBase {
             return;
         }
 
-        PlayerRef senderPlayerRef = fp.getPlayer();
-        if (senderPlayerRef == null) {
-            ctx.sendMessage(Message.raw("You are not online."));
-            return;
-        }
+        Transform warpLoc = warpArg.get(ctx).location().toTransform();
+        TransformComponent transformComponent = store.getComponent(ref, TransformComponent.getComponentType());
 
-        Ref<EntityStore> senderRef = senderPlayerRef.getReference();
-        if (senderRef == null || !senderRef.isValid()) {
-            ctx.sendMessage(Message.raw("You are not in a world."));
-            return;
-        }
+        Vector3f previousBodyRotation = transformComponent.getRotation().clone();
+        Vector3f spawnRotation = warpLoc.getRotation().clone();
+        warpLoc.setRotation(new Vector3f(previousBodyRotation.getPitch(), spawnRotation.getYaw(), previousBodyRotation.getRoll()));
 
-        String warpName = nameArg.get(ctx);
-        if (warpName == null || warpName.trim().isEmpty()) {
-            ctx.sendMessage(Message.raw("Warp name cannot be empty."));
-            return;
-        }
+        Teleport teleport = new Teleport(world, warpLoc).withHeadRotation(spawnRotation);
+        store.addComponent(ref, Teleport.getComponentType(), teleport);
 
-        // TODO: Check per-warp permission: fancycore.commands.warp.<name>
-        // if (!ctx.sender().hasPermission("fancycore.commands.warp." + warpName)) {
-        //     ctx.sendMessage(Message.raw("You do not have permission to use this warp."));
-        //     return;
-        // }
-
-        Store<EntityStore> senderStore = senderRef.getStore();
-        World currentWorld = ((EntityStore) senderStore.getExternalData()).getWorld();
-
-        // Get warp location
-        com.fancyinnovations.fancycore.teleport.storage.WarpStorage warpStorage = 
-                com.fancyinnovations.fancycore.main.FancyCorePlugin.get().getWarpStorage();
-        Map<String, Object> warpLocation = warpStorage.getWarp(warpName);
-
-        if (warpLocation == null) {
-            ctx.sendMessage(Message.raw("Warp \"" + warpName + "\" does not exist."));
-            return;
-        }
-
-        // Extract warp location data
-        String worldName = (String) warpLocation.get("world");
-        Double x = ((Number) warpLocation.get("x")).doubleValue();
-        Double y = ((Number) warpLocation.get("y")).doubleValue();
-        Double z = ((Number) warpLocation.get("z")).doubleValue();
-        Double yaw = ((Number) warpLocation.get("yaw")).doubleValue();
-        Double pitch = ((Number) warpLocation.get("pitch")).doubleValue();
-
-        // Get target world
-        World targetWorld = Universe.get().getWorld(worldName);
-        if (targetWorld == null) {
-            ctx.sendMessage(Message.raw("The world \"" + worldName + "\" is no longer loaded."));
-            return;
-        }
-
-        // Save previous location for /back command (on current world thread)
-        currentWorld.execute(() -> {
-            TeleportLocationHelper.savePreviousLocation(fp, senderRef, senderStore, currentWorld);
-        });
-
-        // Execute teleportation on the target world thread
-        targetWorld.execute(() -> {
-            // Create transform from warp location
-            Transform destinationTransform = new Transform(
-                    new Vector3d(x, y, z),
-                    new Vector3f((float) pitch.doubleValue(), (float) yaw.doubleValue(), 0.0f)
-            );
-
-            // Create teleport component
-            Teleport teleport = new Teleport(targetWorld, destinationTransform);
-
-            // Add teleport component to sender
-            senderStore.addComponent(senderRef, Teleport.getComponentType(), teleport);
-
-            // Send success message
-            ctx.sendMessage(Message.raw("Teleported to warp \"" + warpName + "\"."));
-        });
+        fp.sendMessage("Teleported to spawn point.");
     }
 }

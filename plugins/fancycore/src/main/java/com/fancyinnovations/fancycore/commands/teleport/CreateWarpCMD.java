@@ -2,32 +2,43 @@ package com.fancyinnovations.fancycore.commands.teleport;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.main.FancyCorePlugin;
-import com.fancyinnovations.fancycore.teleport.storage.WarpStorage;
+import com.fancyinnovations.fancycore.api.teleport.Location;
+import com.fancyinnovations.fancycore.api.teleport.Warp;
+import com.fancyinnovations.fancycore.api.teleport.WarpService;
+import com.fancyinnovations.fancycore.utils.NumberUtils;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.command.system.arguments.system.DefaultArg;
+import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
-import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.command.system.arguments.types.RelativeDoublePosition;
+import com.hypixel.hytale.server.core.command.system.basecommands.AbstractWorldCommand;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import org.jetbrains.annotations.NotNull;
 
-public class CreateWarpCMD extends CommandBase {
+import javax.annotation.Nonnull;
 
-    protected final RequiredArg<String> nameArg = this.withRequiredArg("warp", "name of the warp", ArgTypes.STRING);
+public class CreateWarpCMD extends AbstractWorldCommand {
+
+    protected final RequiredArg<String> nameArg = this.withRequiredArg("warp", "name of the new warp", ArgTypes.STRING);
+    private final OptionalArg<RelativeDoublePosition> positionArg = this.withOptionalArg("position", "position to set", ArgTypes.RELATIVE_POSITION);
+    private final DefaultArg<Vector3f> rotationArg = this.withDefaultArg("rotation", "rotation to set", ArgTypes.ROTATION, Vector3f.FORWARD, "forward looking direction");
 
     public CreateWarpCMD() {
         super("createwarp", "Creates a warp point at your current location with the specified name");
-         requirePermission("fancycore.commands.createwarp");
+        addAliases("setwarp");
+        requirePermission("fancycore.commands.createwarp");
     }
 
     @Override
-    protected void executeSync(@NotNull CommandContext ctx) {
+    protected void execute(@Nonnull CommandContext ctx, @Nonnull World world, @Nonnull Store<EntityStore> store) {
         if (!ctx.isPlayer()) {
             ctx.sendMessage(Message.raw("This command can only be executed by a player."));
             return;
@@ -38,6 +49,7 @@ public class CreateWarpCMD extends CommandBase {
             ctx.sendMessage(Message.raw("FancyPlayer not found."));
             return;
         }
+        Ref<EntityStore> playerRef = ctx.senderAsPlayerRef();
 
         String warpName = nameArg.get(ctx);
         if (warpName == null || warpName.trim().isEmpty()) {
@@ -46,50 +58,41 @@ public class CreateWarpCMD extends CommandBase {
         }
 
         // Check if warp already exists
-        WarpStorage warpStorage = FancyCorePlugin.get().getWarpStorage();
-        if (warpStorage.warpExists(warpName)) {
+        if (WarpService.get().getWarp(warpName) != null) {
             ctx.sendMessage(Message.raw("A warp with the name \"" + warpName + "\" already exists."));
             return;
         }
 
-        // Get sender's location
-        Ref<EntityStore> senderRef = ctx.senderAsPlayerRef();
-        if (senderRef == null || !senderRef.isValid()) {
-            ctx.sendMessage(Message.raw("You are not in a world."));
-            return;
+        Vector3d position;
+        if (this.positionArg.provided(ctx)) {
+            RelativeDoublePosition relativePosition = this.positionArg.get(ctx);
+            position = relativePosition.getRelativePosition(ctx, world, store);
+        } else {
+            TransformComponent transformComponent = store.getComponent(playerRef, TransformComponent.getComponentType());
+            position = transformComponent.getPosition().clone();
         }
 
-        Store<EntityStore> senderStore = senderRef.getStore();
-        World senderWorld = ((EntityStore) senderStore.getExternalData()).getWorld();
+        Vector3f rotation;
+        if (this.rotationArg.provided(ctx)) {
+            rotation = this.rotationArg.get(ctx);
+        } else  {
+            HeadRotation headRotationComponent = store.getComponent(playerRef, HeadRotation.getComponentType());
+            rotation = headRotationComponent.getRotation();
+        }
 
-        // Execute on the world thread to get location
-        senderWorld.execute(() -> {
-            // Get sender's transform and rotation
-            TransformComponent senderTransformComponent = (TransformComponent) senderStore.getComponent(senderRef, TransformComponent.getComponentType());
-            if (senderTransformComponent == null) {
-                ctx.sendMessage(Message.raw("Failed to get your transform."));
-                return;
-            }
+        Warp warp = new Warp(
+                warpName,
+                new Location(
+                        world.getName(),
+                        position.getX(),
+                        position.getY(),
+                        position.getZ(),
+                        rotation.getYaw(),
+                        rotation.getPitch()
+                )
+        );
+        WarpService.get().setWarp(warp);
 
-            HeadRotation senderHeadRotationComponent = (HeadRotation) senderStore.getComponent(senderRef, HeadRotation.getComponentType());
-            if (senderHeadRotationComponent == null) {
-                ctx.sendMessage(Message.raw("Failed to get your head rotation."));
-                return;
-            }
-
-            // Save warp
-            warpStorage.setWarp(
-                    warpName,
-                    senderWorld.getName(),
-                    senderTransformComponent.getPosition().getX(),
-                    senderTransformComponent.getPosition().getY(),
-                    senderTransformComponent.getPosition().getZ(),
-                    senderHeadRotationComponent.getRotation().getYaw(),
-                    senderHeadRotationComponent.getRotation().getPitch()
-            );
-
-            // Send success message
-            ctx.sendMessage(Message.raw("Warp \"" + warpName + "\" created at your current location."));
-        });
+        fp.sendMessage("Spawn point set to " + NumberUtils.formatNumber(warp.location().x()) + ", " + NumberUtils.formatNumber(warp.location().y()) + ", " + NumberUtils.formatNumber(warp.location().z()) + " in world '" + warp.location().worldName() + "'.");
     }
 }
