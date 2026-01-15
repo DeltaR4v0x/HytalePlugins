@@ -23,6 +23,7 @@ public class ClearInventoryCMD extends AbstractPlayerCommand {
 
     public ClearInventoryCMD() {
         super("clearinventory", "Clears the inventory of the targeted player(s)");
+        addAliases("ci");
         requirePermission("fancycore.commands.clearinventory");
     }
 

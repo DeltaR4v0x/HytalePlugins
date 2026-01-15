@@ -17,6 +17,7 @@ public class DeleteBackpackCMD extends CommandBase {
 
     public DeleteBackpackCMD() {
         super("deletebackpack", "Deletes the specified backpack");
+        addAliases("deletebp");
         requirePermission("fancycore.commands.deletebackpack");
     }
 

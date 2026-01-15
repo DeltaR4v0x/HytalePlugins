@@ -18,6 +18,7 @@ public class CreateBackpackCMD extends CommandBase {
 
     public CreateBackpackCMD() {
         super("createbackpack", "Creates a new backpack with the specified name and size");
+        addAliases("createbp");
         requirePermission("fancycore.commands.createbackpack");
     }
 
