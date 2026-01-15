@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 public class WarpCMD extends AbstractPlayerCommand {
 
-    protected final RequiredArg<Warp> warpArg = this.withRequiredArg("warp", "the name of the warp", WarpArg.TYPE);
+    protected final RequiredArg<Warp> warpArg = this.withRequiredArg("warp", "the name of the warp", TeleportArgs.WARP);
 
     public WarpCMD() {
         super("warp", "Teleports you to the warp point with the specified name");

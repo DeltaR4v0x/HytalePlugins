@@ -4,6 +4,7 @@ import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.economy.Currency;
 import com.fancyinnovations.fancycore.api.permissions.Permission;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerData;
+import com.fancyinnovations.fancycore.api.player.Home;
 import com.fancyinnovations.fancycore.player.FancyPlayerDataImpl;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,6 +24,7 @@ public record JsonFancyPlayer(
         Map<String, Double> balances,
         @SerializedName("first_login_time") long firstLoginTime,
         @SerializedName("play_time") long playTime,
+        List<Home> homes,
         @SerializedName("custom_data") Map<String, Object> customData
 ) {
 
@@ -57,6 +59,7 @@ public record JsonFancyPlayer(
                 balances,
                 player.getFirstLoginTime(),
                 player.getPlayTime(),
+                player.getHomes(),
                 player.getCustomData()
         );
     }
@@ -108,6 +111,7 @@ public record JsonFancyPlayer(
                 balances,
                 firstLoginTime,
                 playTime,
+                homes,
                 customData
         );
     }

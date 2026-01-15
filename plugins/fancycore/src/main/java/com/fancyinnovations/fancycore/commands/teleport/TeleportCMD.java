@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -20,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class TeleportCMD extends CommandBase {
 
-    protected final RequiredArg<PlayerRef> targetArg = this.withRequiredArg("", TeleportArg.DESCRIPTION, TeleportArg.TYPE);
-    protected final OptionalArg<PlayerRef> destinationArg = this.withOptionalArg("", "The destination player", TeleportArg.TYPE);
+    protected final RequiredArg<PlayerRef> targetArg = this.withRequiredArg("target", "The player to teleport", ArgTypes.PLAYER_REF);
+    protected final OptionalArg<PlayerRef> destinationArg = this.withOptionalArg("", "The destination player", ArgTypes.PLAYER_REF);
 
     public TeleportCMD() {
         super("teleport", "Teleports you or the specified player to another player's location");

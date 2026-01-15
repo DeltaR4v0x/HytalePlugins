@@ -9,6 +9,7 @@ import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 public class TeleportAcceptCMD extends CommandBase {
 
-    protected final OptionalArg<PlayerRef> senderArg = this.withOptionalArg("", "The player who sent the request", TeleportArg.TYPE);
+    protected final OptionalArg<PlayerRef> senderArg = this.withOptionalArg("target", "The player who sent the request", ArgTypes.PLAYER_REF);
 
     public TeleportAcceptCMD() {
         super("teleportaccept", "Accepts a pending teleport request from another player");

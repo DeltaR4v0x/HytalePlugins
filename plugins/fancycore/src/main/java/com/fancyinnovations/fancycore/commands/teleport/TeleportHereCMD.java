@@ -8,6 +8,7 @@ import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TeleportHereCMD extends CommandBase {
 
-    protected final RequiredArg<PlayerRef> targetArg = this.withRequiredArg("", "The player to teleport", TeleportArg.TYPE);
+    protected final RequiredArg<PlayerRef> targetArg = this.withRequiredArg("target", "The player to teleport", ArgTypes.PLAYER_REF);
 
     public TeleportHereCMD() {
         super("teleporthere", "Teleports the specified player to your location");

@@ -33,6 +33,7 @@ public class SetSpawnCMD extends AbstractWorldCommand {
 
     public SetSpawnCMD() {
         super("setspawn", "Sets the server's spawn point to your current location");
+        addAliases("createspawn");
         requirePermission("fancycore.commands.setspawn");
     }
 

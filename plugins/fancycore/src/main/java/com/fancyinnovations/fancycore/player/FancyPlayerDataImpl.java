@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.player;
 import com.fancyinnovations.fancycore.api.economy.Currency;
 import com.fancyinnovations.fancycore.api.permissions.Permission;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerData;
+import com.fancyinnovations.fancycore.api.player.Home;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.fancyinnovations.fancycore.permissions.PermissionImpl;
 import com.fancyinnovations.fancycore.player.storage.json.JsonFancyPlayer;
@@ -20,6 +21,7 @@ public class FancyPlayerDataImpl implements FancyPlayerData {
     private final List<Permission> permissions;
     private final List<String> groups;
     private final Map<String, Object> customData;
+    private final Map<String, Home> homes;
     private UUID uuid;
     private String username;
     private String nickname;
@@ -46,6 +48,7 @@ public class FancyPlayerDataImpl implements FancyPlayerData {
         this.balances = new ConcurrentHashMap<>();
         this.firstLoginTime = System.currentTimeMillis();
         this.playTime = 0L;
+        this.homes = new ConcurrentHashMap<>();
         this.customData = new ConcurrentHashMap<>();
 
         this.isDirty = true;
@@ -63,6 +66,7 @@ public class FancyPlayerDataImpl implements FancyPlayerData {
             Map<Currency, Double> balances,
             long firstLoginTime,
             long playTime,
+            List<Home> homes,
             Map<String, Object> customData
     ) {
         this.uuid = uuid;
@@ -77,6 +81,10 @@ public class FancyPlayerDataImpl implements FancyPlayerData {
         this.firstLoginTime = firstLoginTime;
         this.playTime = playTime;
         this.customData = customData;
+        this.homes = new ConcurrentHashMap<>();
+        for (Home home : homes) {
+            this.homes.put(home.name(), home);
+        }
         this.isDirty = false;
     }
 
@@ -263,6 +271,34 @@ public class FancyPlayerDataImpl implements FancyPlayerData {
     @Override
     public void addPlayTime(long additionalTime) {
         setPlayTime(this.playTime + additionalTime);
+    }
+
+    @Override
+    public List<Home> getHomes() {
+        return new ArrayList<>(homes.values());
+    }
+
+    @Override
+    public void setHomes(List<Home> homes) {
+        this.homes.clear();
+        for (Home home : homes) {
+            this.homes.put(home.name(), home);
+        }
+    }
+
+    @Override
+    public Home getHome(String homeName) {
+        return homes.get(homeName);
+    }
+
+    @Override
+    public void addHome(Home home) {
+        this.homes.put(home.name(), home);
+    }
+
+    @Override
+    public void removeHome(String homeName) {
+        this.homes.remove(homeName);
     }
 
     @Override

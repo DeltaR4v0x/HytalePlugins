@@ -299,7 +299,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new DeleteHomeCMD());
         CommandManager.get().register(new HomeCMD());
         CommandManager.get().register(new ListHomesCMD());
-        CommandManager.get().register(new CreateWarpCMD());
+        CommandManager.get().register(new SetWarpCMD());
         CommandManager.get().register(new DeleteWarpCMD());
         CommandManager.get().register(new WarpCMD());
         CommandManager.get().register(new ListWarpsCMD());

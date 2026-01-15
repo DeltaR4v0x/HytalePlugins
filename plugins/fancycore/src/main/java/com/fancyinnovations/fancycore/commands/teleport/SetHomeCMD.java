@@ -2,33 +2,42 @@ package com.fancyinnovations.fancycore.commands.teleport;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.api.player.Home;
+import com.fancyinnovations.fancycore.api.teleport.Location;
+import com.fancyinnovations.fancycore.utils.NumberUtils;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.command.system.arguments.system.DefaultArg;
+import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
-import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.command.system.arguments.types.RelativeDoublePosition;
+import com.hypixel.hytale.server.core.command.system.basecommands.AbstractWorldCommand;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.annotation.Nonnull;
 
-public class SetHomeCMD extends CommandBase {
+public class SetHomeCMD extends AbstractWorldCommand {
 
-    protected final RequiredArg<String> nameArg = this.withRequiredArg("", "Home name", ArgTypes.STRING);
+    protected final RequiredArg<String> nameArg = this.withRequiredArg("home", "name of the new home", ArgTypes.STRING);
+    private final OptionalArg<RelativeDoublePosition> positionArg = this.withOptionalArg("position", "position to set", ArgTypes.RELATIVE_POSITION);
+    private final DefaultArg<Vector3f> rotationArg = this.withDefaultArg("rotation", "rotation to set", ArgTypes.ROTATION, Vector3f.FORWARD, "forward looking direction");
 
     public SetHomeCMD() {
         super("sethome", "Sets your home point to your current location");
+        addAliases("createhome");
         requirePermission("fancycore.commands.sethome");
     }
 
     @Override
-    protected void executeSync(@NotNull CommandContext ctx) {
+    protected void execute(@Nonnull CommandContext ctx, @Nonnull World world, @Nonnull Store<EntityStore> store) {
         if (!ctx.isPlayer()) {
             ctx.sendMessage(Message.raw("This command can only be executed by a player."));
             return;
@@ -36,65 +45,44 @@ public class SetHomeCMD extends CommandBase {
 
         FancyPlayer fp = FancyPlayerService.get().getByUUID(ctx.sender().getUuid());
         if (fp == null) {
-            ctx.sendMessage(Message.raw("FancyPlayer not found."));
+            fp.sendMessage("FancyPlayer not found.");
+            return;
+        }
+        Ref<EntityStore> playerRef = ctx.senderAsPlayerRef();
+
+        Vector3d position;
+        if (this.positionArg.provided(ctx)) {
+            RelativeDoublePosition relativePosition = this.positionArg.get(ctx);
+            position = relativePosition.getRelativePosition(ctx, world, store);
+        } else {
+            TransformComponent transformComponent = store.getComponent(playerRef, TransformComponent.getComponentType());
+            position = transformComponent.getPosition().clone();
+        }
+
+        Vector3f rotation;
+        if (this.rotationArg.provided(ctx)) {
+            rotation = this.rotationArg.get(ctx);
+        } else  {
+            HeadRotation headRotationComponent = store.getComponent(playerRef, HeadRotation.getComponentType());
+            rotation = headRotationComponent.getRotation();
+        }
+
+        String name = nameArg.get(ctx);
+        if (fp.getData().getHome(name) != null) {
+            fp.sendMessage("A home with the name '" + name + "' already exists.");
             return;
         }
 
-        String homeName = nameArg.get(ctx);
-        if (homeName == null || homeName.trim().isEmpty()) {
-            ctx.sendMessage(Message.raw("Home name cannot be empty."));
-            return;
-        }
+        Location homeLocation = new Location(
+                world.getName(),
+                position.getX(),
+                position.getY(),
+                position.getZ(),
+                rotation.getYaw(),
+                rotation.getPitch()
+        );
+        fp.getData().addHome(new Home(name, homeLocation));
 
-        // Get sender's location
-        Ref<EntityStore> senderRef = ctx.senderAsPlayerRef();
-        if (senderRef == null || !senderRef.isValid()) {
-            ctx.sendMessage(Message.raw("You are not in a world."));
-            return;
-        }
-
-        Store<EntityStore> senderStore = senderRef.getStore();
-        World senderWorld = ((EntityStore) senderStore.getExternalData()).getWorld();
-
-        // Execute on the world thread to get location
-        senderWorld.execute(() -> {
-            // Get sender's transform and rotation
-            TransformComponent senderTransformComponent = (TransformComponent) senderStore.getComponent(senderRef, TransformComponent.getComponentType());
-            if (senderTransformComponent == null) {
-                ctx.sendMessage(Message.raw("Failed to get your transform."));
-                return;
-            }
-
-            HeadRotation senderHeadRotationComponent = (HeadRotation) senderStore.getComponent(senderRef, HeadRotation.getComponentType());
-            if (senderHeadRotationComponent == null) {
-                ctx.sendMessage(Message.raw("Failed to get your head rotation."));
-                return;
-            }
-
-            // Get or create homes map
-            Map<String, Object> customData = fp.getData().getCustomData();
-            @SuppressWarnings("unchecked")
-            Map<String, Map<String, Object>> homes = (Map<String, Map<String, Object>>) customData.get("homes");
-            if (homes == null) {
-                homes = new HashMap<>();
-                customData.put("homes", homes);
-            }
-
-            // Create home location data
-            Map<String, Object> homeLocation = new HashMap<>();
-            homeLocation.put("world", senderWorld.getName());
-            homeLocation.put("x", senderTransformComponent.getPosition().getX());
-            homeLocation.put("y", senderTransformComponent.getPosition().getY());
-            homeLocation.put("z", senderTransformComponent.getPosition().getZ());
-            homeLocation.put("yaw", senderHeadRotationComponent.getRotation().getYaw());
-            homeLocation.put("pitch", senderHeadRotationComponent.getRotation().getPitch());
-
-            // Save home
-            homes.put(homeName, homeLocation);
-            fp.getData().setCustomData("homes", homes);
-
-            // Send success message
-            ctx.sendMessage(Message.raw("Home \"" + homeName + "\" set to your current location."));
-        });
+        fp.sendMessage("Home point " + name + " set to " + NumberUtils.formatNumber(homeLocation.x()) + ", " + NumberUtils.formatNumber(homeLocation.y()) + ", " + NumberUtils.formatNumber(homeLocation.z()) + " in world '" + homeLocation.worldName() + "'.");
     }
 }

@@ -6,13 +6,14 @@ import com.fancyinnovations.fancycore.api.teleport.TeleportRequestService;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.jetbrains.annotations.NotNull;
 
 public class TeleportRequestCMD extends CommandBase {
 
-    protected final RequiredArg<PlayerRef> targetArg = this.withRequiredArg("", "The player to request teleportation to", TeleportArg.TYPE);
+    protected final RequiredArg<PlayerRef> targetArg = this.withRequiredArg("target", "The player to request teleportation to", ArgTypes.PLAYER_REF);
 
     public TeleportRequestCMD() {
         super("teleportrequest", "Sends a teleport request to another player to teleport to their location");

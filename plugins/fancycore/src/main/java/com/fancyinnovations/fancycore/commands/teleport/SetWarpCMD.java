@@ -25,16 +25,16 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 
-public class CreateWarpCMD extends AbstractWorldCommand {
+public class SetWarpCMD extends AbstractWorldCommand {
 
     protected final RequiredArg<String> nameArg = this.withRequiredArg("warp", "name of the new warp", ArgTypes.STRING);
     private final OptionalArg<RelativeDoublePosition> positionArg = this.withOptionalArg("position", "position to set", ArgTypes.RELATIVE_POSITION);
     private final DefaultArg<Vector3f> rotationArg = this.withDefaultArg("rotation", "rotation to set", ArgTypes.ROTATION, Vector3f.FORWARD, "forward looking direction");
 
-    public CreateWarpCMD() {
-        super("createwarp", "Creates a warp point at your current location with the specified name");
-        addAliases("setwarp");
-        requirePermission("fancycore.commands.createwarp");
+    public SetWarpCMD() {
+        super("setwarp", "Creates a warp point at your current location with the specified name");
+        addAliases("createwarp");
+        requirePermission("fancycore.commands.setwarp");
     }
 
     @Override
@@ -93,6 +93,6 @@ public class CreateWarpCMD extends AbstractWorldCommand {
         );
         WarpService.get().setWarp(warp);
 
-        fp.sendMessage("Spawn point set to " + NumberUtils.formatNumber(warp.location().x()) + ", " + NumberUtils.formatNumber(warp.location().y()) + ", " + NumberUtils.formatNumber(warp.location().z()) + " in world '" + warp.location().worldName() + "'.");
+        fp.sendMessage("Set warp " + warpName + " at " + NumberUtils.formatNumber(warp.location().x()) + ", " + NumberUtils.formatNumber(warp.location().y()) + ", " + NumberUtils.formatNumber(warp.location().z()) + " in world '" + warp.location().worldName() + "'.");
     }
 }

@@ -9,10 +9,9 @@ import com.hypixel.hytale.server.core.command.system.arguments.types.SingleArgum
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class WarpArg {
+public class TeleportArgs {
 
-    public static final SingleArgumentType<Warp> TYPE = new SingleArgumentType<Warp>("Warp", "The name of the warp", new String[]{"spawn", "shop", "arena"}) {
-
+    public static final SingleArgumentType<Warp> WARP = new SingleArgumentType<Warp>("Warp", "The name of the warp", new String[]{"spawn", "shop", "arena"}) {
         public @Nullable Warp parse(@Nonnull String input, @Nonnull ParseResult parseResult) {
             Warp warp = WarpService.get().getWarp(input);
             if (warp == null) {

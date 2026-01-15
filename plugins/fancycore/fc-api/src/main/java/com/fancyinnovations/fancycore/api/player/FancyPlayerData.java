@@ -74,6 +74,16 @@ public interface FancyPlayerData {
 
     void addPlayTime(long playTime);
 
+    List<Home> getHomes();
+
+    void setHomes(List<Home> homes);
+
+    Home getHome(String homeName);
+
+    void addHome(Home home);
+
+    void removeHome(String homeName);
+
     Map<String, Object> getCustomData();
 
     <T> void setCustomData(String key, T value);

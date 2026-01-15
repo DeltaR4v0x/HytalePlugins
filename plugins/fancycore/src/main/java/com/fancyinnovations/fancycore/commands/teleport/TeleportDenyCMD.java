@@ -6,6 +6,7 @@ import com.fancyinnovations.fancycore.api.teleport.TeleportRequestService;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public class TeleportDenyCMD extends CommandBase {
 
-    protected final OptionalArg<PlayerRef> senderArg = this.withOptionalArg("", "The player who sent the request", TeleportArg.TYPE);
+    protected final OptionalArg<PlayerRef> senderArg = this.withOptionalArg("target", "The player who sent the request", ArgTypes.PLAYER_REF);
 
     public TeleportDenyCMD() {
         super("teleportdeny", "Denies a pending teleport request from another player");

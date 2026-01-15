@@ -2,19 +2,17 @@ package com.fancyinnovations.fancycore.commands.teleport;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.api.player.Home;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public class ListHomesCMD extends CommandBase {
 
     public ListHomesCMD() {
         super("listhomes", "Lists all your home points");
+        addAliases("homes");
         requirePermission("fancycore.commands.listhomes");
     }
 
@@ -31,23 +29,9 @@ public class ListHomesCMD extends CommandBase {
             return;
         }
 
-        // Get homes map
-        Map<String, Object> customData = fp.getData().getCustomData();
-        @SuppressWarnings("unchecked")
-        Map<String, Map<String, Object>> homes = (Map<String, Map<String, Object>>) customData.get("homes");
-
-        if (homes == null || homes.isEmpty()) {
-            ctx.sendMessage(Message.raw("You do not have any homes set. Use /sethome <name> to set a home."));
-            return;
+        fp.sendMessage("Your Homes:");
+        for (Home home : fp.getData().getHomes()) {
+            fp.sendMessage("- " + home.name() + " (World: " + home.location().worldName() + ", X: " + home.location().x() + ", Y: " + home.location().y() + ", Z: " + home.location().z() + ")");
         }
-
-        // Get home names and sort them
-        Set<String> homeNames = homes.keySet();
-        String homeList = homeNames.stream()
-                .sorted()
-                .collect(Collectors.joining(", "));
-
-        // Send message
-        ctx.sendMessage(Message.raw("Your homes (" + homeNames.size() + "): " + homeList));
     }
 }
