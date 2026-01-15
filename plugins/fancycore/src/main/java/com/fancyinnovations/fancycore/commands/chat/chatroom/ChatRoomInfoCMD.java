@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -35,6 +36,11 @@ public class ChatRoomInfoCMD extends CommandBase {
         }
 
         ChatRoom chatRoom = chatRoomNameArg.provided(ctx) ? chatRoomNameArg.get(ctx) : fp.getCurrentChatRoom();
+
+        if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.chatrooms." + chatRoom.getName())) {
+            fp.sendMessage("You do not have permission to view info about this chat room.");
+            return;
+        }
 
         List<String> nicknames = chatRoom.getWatchers().stream()
                 .map(fancyPlayer -> fancyPlayer.getData().getNickname())

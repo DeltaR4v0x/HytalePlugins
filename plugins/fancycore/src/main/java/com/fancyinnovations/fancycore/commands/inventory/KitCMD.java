@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.inventory.transaction.ItemStackTransaction;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -45,6 +46,14 @@ public class KitCMD extends AbstractPlayerCommand {
             ctx.sendMessage(Message.raw("FancyPlayer not found."));
             return;
         }
+
+        Kit kit = kitArg.get(ctx);
+
+        if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.kits." + kit.name())) {
+            fp.sendMessage("You do not have permission to use this kit.");
+            return;
+        }
+
         Player player = ref.getStore().getComponent(ref, Player.getComponentType());
         if (player == null) {
             fp.sendMessage("You are not an player");
@@ -53,7 +62,7 @@ public class KitCMD extends AbstractPlayerCommand {
         ItemContainer hotbar = player.getInventory().getHotbar();
         ItemContainer storage = player.getInventory().getStorage();
 
-        Kit kit = kitArg.get(ctx);
+
         List<ItemStack> items = KitsService.get().getKitItems(kit);
         for (ItemStack item : items) {
             if (!tryToAddItemToContainer(item, hotbar)) {

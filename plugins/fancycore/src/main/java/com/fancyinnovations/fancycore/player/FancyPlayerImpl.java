@@ -5,11 +5,10 @@ import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.events.chat.PlayerSwitchedChatRoomEvent;
 import com.fancyinnovations.fancycore.api.moderation.Punishment;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentType;
-import com.fancyinnovations.fancycore.api.permissions.Group;
-import com.fancyinnovations.fancycore.api.permissions.Permission;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerData;
 import com.fancyinnovations.fancycore.utils.ColorUtils;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,25 +68,28 @@ public class FancyPlayerImpl implements FancyPlayer {
     }
 
     @Override
+    @Deprecated
     public boolean checkPermission(String permission) {
-        for (Permission p : data.getPermissions()) {
-            if (p.getPermission().equalsIgnoreCase(permission)) {
-                return p.isEnabled();
-            }
-        }
+        return PermissionsModule.get().hasPermission(data.getUUID(), permission);
 
-        for (String groupName : data.getGroups()) {
-            Group group = FancyCore.get().getPermissionService().getGroup(groupName);
-            if (group == null) {
-                continue;
-            }
-
-            if (group.checkPermission(permission)) {
-                return true;
-            }
-        }
-
-        return false; // permission not found
+//        for (Permission p : data.getPermissions()) {
+//            if (p.getPermission().equalsIgnoreCase(permission)) {
+//                return p.isEnabled();
+//            }
+//        }
+//
+//        for (String groupName : data.getGroups()) {
+//            Group group = FancyCore.get().getPermissionService().getGroup(groupName);
+//            if (group == null) {
+//                continue;
+//            }
+//
+//            if (group.checkPermission(permission)) {
+//                return true;
+//            }
+//        }
+//
+//        return false; // permission not found
     }
 
     @Override

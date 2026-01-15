@@ -7,6 +7,7 @@ import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatRoomListCMD extends CommandBase {
@@ -31,10 +32,9 @@ public class ChatRoomListCMD extends CommandBase {
 
         fp.sendMessage("Chat Rooms: ");
         for (ChatRoom cr : ChatService.get().getAllChatRooms()) {
-            // TODO: Permission check
-//            if (!fp.checkPermission("fancycore.chatroom."+cr.getName())) {
-//                continue;
-//            }
+            if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.chatrooms." + cr.getName())) {
+                continue;
+            }
 
             fp.sendMessage("- " + cr.getName() + " (" + cr.getWatchers().size() + " watchers)");
         }

@@ -7,6 +7,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatRoomWatchCMD extends CommandBase {
@@ -33,11 +34,10 @@ public class ChatRoomWatchCMD extends CommandBase {
 
         ChatRoom chatRoom = chatRoomNameArg.get(ctx);
 
-        // TODO: Permission check
-//        if (!fp.checkPermission("fancycore.chatroom."+chatRoom.getName())) {
-//            fp.sendMessage(Message.raw("You do not have permission to watch chat room " + chatRoom.getName() + "."));
-//            return;
-//        }
+        if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.chatrooms." + chatRoom.getName())) {
+            fp.sendMessage("You do not have permission to watch this chat room.");
+            return;
+        }
 
         if (chatRoom.getWatchers().contains(fp)) {
             fp.sendMessage("You are already watching chat room " + chatRoom.getName() + ".");

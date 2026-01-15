@@ -7,6 +7,7 @@ import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import org.jetbrains.annotations.NotNull;
 
 public class ListKitsCMD extends CommandBase {
@@ -32,6 +33,10 @@ public class ListKitsCMD extends CommandBase {
 
         fp.sendMessage("Available Kits:");
         for (Kit kit : KitsService.get().getAllKits()) {
+            if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.kits." + kit.name())) {
+                continue;
+            }
+
             fp.sendMessage("- " + kit.name());
         }
     }

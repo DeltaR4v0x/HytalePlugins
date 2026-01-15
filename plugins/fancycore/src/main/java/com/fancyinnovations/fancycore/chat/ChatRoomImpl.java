@@ -6,6 +6,7 @@ import com.fancyinnovations.fancycore.api.events.chat.*;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.fancyinnovations.fancycore.utils.TimeUtils;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import de.oliver.fancyanalytics.logger.properties.StringProperty;
 
 import java.util.*;
@@ -78,7 +79,7 @@ public class ChatRoomImpl implements ChatRoom {
 
     @Override
     public void sendMessage(FancyPlayer sender, String message) {
-        if (muted && !sender.checkPermission("fancycore.chat.bypassmute")) {
+        if (muted && !PermissionsModule.get().hasPermission(sender.getData().getUUID(), "fancycore.chat.bypassmute")) {
             sender.sendMessage("Chat is currently muted."); // TODO (I18N): make message translatable
             return;
         }
@@ -86,7 +87,7 @@ public class ChatRoomImpl implements ChatRoom {
         long lastMessageTime = lastMessageTimestamps.getOrDefault(sender.getData().getUUID(), 0L);
         long currentTime = System.currentTimeMillis();
         long remainingCooldown = cooldown - (currentTime - lastMessageTime);
-        if (remainingCooldown > 0 && !sender.checkPermission("fancycore.chat.bypasscooldown")) {
+        if (remainingCooldown > 0 && !PermissionsModule.get().hasPermission(sender.getData().getUUID(), "fancycore.chat.bypasscooldown")) {
             sender.sendMessage("You must wait " + TimeUtils.formatTime(remainingCooldown) + " before sending another message."); // TODO (I18N): make message translatable
             return;
         }

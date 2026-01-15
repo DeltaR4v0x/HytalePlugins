@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalAr
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import org.jetbrains.annotations.NotNull;
 
 public class PermissionsCheckCMD extends CommandBase {
@@ -36,7 +37,7 @@ public class PermissionsCheckCMD extends CommandBase {
 
         String permission = permissionArg.get(ctx);
 
-        boolean success = target.checkPermission(permission);
+        boolean success = PermissionsModule.get().hasPermission(target.getData().getUUID(), permission);
 
         if (ctx.isPlayer()) {
             fp.sendMessage("Player " + target.getData().getUsername() + (success ? " has " : " does not have ") + "the permission " + permission + ".");

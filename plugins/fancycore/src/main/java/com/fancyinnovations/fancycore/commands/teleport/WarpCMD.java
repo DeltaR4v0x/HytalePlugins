@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredAr
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -41,7 +42,14 @@ public class WarpCMD extends AbstractPlayerCommand {
             return;
         }
 
-        Transform warpLoc = warpArg.get(ctx).location().toTransform();
+        Warp warp = warpArg.get(ctx);
+
+        if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.warps." + warp.name())) {
+            fp.sendMessage("You do not have permission to use this warp.");
+            return;
+        }
+
+        Transform warpLoc = warp.location().toTransform();
         TransformComponent transformComponent = store.getComponent(ref, TransformComponent.getComponentType());
 
         Vector3f previousBodyRotation = transformComponent.getRotation().clone();
