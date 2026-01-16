@@ -59,18 +59,18 @@ tasks.register<JavaExec>("runServer") {
 
     workingDir = file("run")
 
-    classpath = files("server.jar")
+    classpath = files("HytaleServer.jar")
 
     mainClass.set("-jar")
 
     args(
-        "server.jar",
+        "HytaleServer.jar",
         "--assets",
         "Assets.zip",
         "--disable-sentry"
     )
 
-    jvmArgs("-XX:AOTCache=HytaleServer.aot")
+//    jvmArgs("-XX:AOTCache=HytaleServer.aot")
 
     javaLauncher.set(
         javaToolchains.launcherFor {
