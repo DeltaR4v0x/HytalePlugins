@@ -12,30 +12,24 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FancyPlayerServiceImpl implements FancyPlayerService {
 
     private final Map<UUID, FancyPlayer> cache;
-    private final Set<FancyPlayer> onlinePlayers;
     private final FancyPlayerStorage storage;
 
     public FancyPlayerServiceImpl() {
         this.cache = new ConcurrentHashMap<>();
-        this.onlinePlayers = new HashSet<>();
         this.storage = FancyCorePlugin.get().getPlayerStorage();
     }
 
     @Override
     public FancyPlayer getByUUID(UUID uuid) {
-        // First, check if player is in onlinePlayers set (these have correct PlayerRef)
-        for (FancyPlayer onlinePlayer : onlinePlayers) {
-            if (onlinePlayer.getData().getUUID().equals(uuid)) {
-                return onlinePlayer;
-            }
-        }
-
         // Check cache
         FancyPlayer cached = cache.get(uuid);
         if (cached != null) {
@@ -44,10 +38,6 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
                 PlayerRef playerRef = Universe.get().getPlayer(uuid);
                 if (playerRef != null && playerRef.isValid()) {
                     cached.setPlayer(playerRef);
-                    // Also add to onlinePlayers if not already there
-                    if (!onlinePlayers.contains(cached)) {
-                        onlinePlayers.add(cached);
-                    }
                 }
             }
             return cached;
@@ -60,7 +50,6 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
             PlayerRef playerRef = Universe.get().getPlayer(uuid);
             if (playerRef != null && playerRef.isValid()) {
                 fromStorage.setPlayer(playerRef);
-                onlinePlayers.add(fromStorage);
             }
         }
 
@@ -69,13 +58,6 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
 
     @Override
     public FancyPlayer getByUsername(String username) {
-        // First, check if player is in onlinePlayers set (these have correct PlayerRef)
-        for (FancyPlayer onlinePlayer : onlinePlayers) {
-            if (onlinePlayer.getData().getUsername().equalsIgnoreCase(username)) {
-                return onlinePlayer;
-            }
-        }
-
         // Check cache
         for (FancyPlayer fp : cache.values()) {
             if (fp.getData().getUsername().equalsIgnoreCase(username)) {
@@ -84,10 +66,6 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
                     PlayerRef playerRef = Universe.get().getPlayerByUsername(username, NameMatching.EXACT);
                     if (playerRef != null && playerRef.isValid()) {
                         fp.setPlayer(playerRef);
-                        // Also add to onlinePlayers if not already there
-                        if (!onlinePlayers.contains(fp)) {
-                            onlinePlayers.add(fp);
-                        }
                     }
                 }
                 return fp;
@@ -101,7 +79,6 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
             PlayerRef playerRef = Universe.get().getPlayerByUsername(username, NameMatching.EXACT);
             if (playerRef != null && playerRef.isValid()) {
                 fromStorage.setPlayer(playerRef);
-                onlinePlayers.add(fromStorage);
             }
         }
 
@@ -110,22 +87,21 @@ public class FancyPlayerServiceImpl implements FancyPlayerService {
 
     @Override
     public List<FancyPlayer> getOnlinePlayers() {
-        return new ArrayList<>(onlinePlayers);
+        List<FancyPlayer> onlinePlayers = new ArrayList<>();
+
+        for (PlayerRef player : Universe.get().getPlayers()) {
+            FancyPlayer fancyPlayer = getByUUID(player.getUuid());
+            if (fancyPlayer != null) {
+                onlinePlayers.add(fancyPlayer);
+            }
+        }
+
+        return onlinePlayers;
     }
 
     @Override
     public FancyPlayerData fromJson(String json) {
         return FancyCorePlugin.GSON.fromJson(json, JsonFancyPlayer.class).toFancyPlayer();
-    }
-
-    @ApiStatus.Internal
-    public void addOnlinePlayer(FancyPlayer player) {
-        onlinePlayers.add(player);
-    }
-
-    @ApiStatus.Internal
-    public void removeOnlinePlayer(FancyPlayer player) {
-        onlinePlayers.remove(player);
     }
 
     @ApiStatus.Internal

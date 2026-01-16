@@ -24,7 +24,7 @@ public class PlayerLeaveListener {
         fp.getData().addPlayTime(playtime);
         fp.setJoinedAt(-1);
 
-        playerService.removeOnlinePlayer(fp);
+        FancyCore.get().getPlayerStorage().savePlayer(fp.getData());
 
         String leaveMsg = PlaceholderService.get().parse(fp, FancyCore.get().getConfig().getLeaveMessage());
         for (FancyPlayer onlinePlayer : playerService.getOnlinePlayers()) {

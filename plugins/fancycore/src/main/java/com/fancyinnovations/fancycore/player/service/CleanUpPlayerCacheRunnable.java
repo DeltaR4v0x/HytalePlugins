@@ -20,7 +20,6 @@ public class CleanUpPlayerCacheRunnable implements Runnable {
         for (FancyPlayer fp : service.getAllCached()) {
             if (!fp.isOnline()) {
                 service.removePlayerFromCache(fp.getData().getUUID());
-                service.removeOnlinePlayer(fp);
             }
         }
     }

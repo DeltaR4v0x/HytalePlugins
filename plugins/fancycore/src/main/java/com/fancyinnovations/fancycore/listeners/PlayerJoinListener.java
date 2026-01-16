@@ -61,9 +61,14 @@ public class PlayerJoinListener {
                     newFancyPlayerData,
                     event.getPlayerRef()
             );
+
+            // Add to cache and save to database
+            playerService.addPlayerToCache(fp);
             FancyCorePlugin.get().getPlayerStorage().savePlayer(fp.getData());
+
             firstJoin = true;
         }
+
         fp.setPlayer(event.getPlayerRef());
 
         fp.getCurrentChatRoom(); // Ensure default chat room is set
@@ -91,7 +96,6 @@ public class PlayerJoinListener {
             }
         }
 
-        playerService.addOnlinePlayer(fp);
         new PlayerJoinedEvent(fp, firstJoin).fire();
     }
 
