@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.teleport;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.api.teleport.Warp;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Transform;
@@ -22,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class WarpCMD extends AbstractPlayerCommand {
 
-    protected final RequiredArg<Warp> warpArg = this.withRequiredArg("warp", "the name of the warp", TeleportArgs.WARP);
+    protected final RequiredArg<Warp> warpArg = this.withRequiredArg("warp", "the name of the warp", FancyCoreArgs.WARP);
 
     public WarpCMD() {
         super("warp", "Teleports you to the warp point with the specified name");

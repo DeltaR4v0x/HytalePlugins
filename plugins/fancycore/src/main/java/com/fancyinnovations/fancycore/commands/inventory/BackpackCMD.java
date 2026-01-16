@@ -4,7 +4,7 @@ import com.fancyinnovations.fancycore.api.inventory.Backpack;
 import com.fancyinnovations.fancycore.api.inventory.BackpacksService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class BackpackCMD extends AbstractPlayerCommand {
 
     protected final RequiredArg<String> nameArg = this.withRequiredArg("name", "backpack name", ArgTypes.STRING);
-    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("player", "target player", FancyPlayerArg.TYPE);
+    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("player", "target player", FancyCoreArgs.PLAYER);
 
     public BackpackCMD() {
         super("backpack", "Opens the specified backpack of the targeted player");

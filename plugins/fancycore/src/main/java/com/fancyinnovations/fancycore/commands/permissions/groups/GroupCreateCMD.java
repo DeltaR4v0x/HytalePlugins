@@ -17,7 +17,7 @@ import java.util.HashSet;
 
 public class GroupCreateCMD extends CommandBase {
 
-    protected final RequiredArg<String> groupNameArg = this.withRequiredArg("group name", GroupArg.DESCRIPTION, ArgTypes.STRING);
+    protected final RequiredArg<String> groupNameArg = this.withRequiredArg("group name", "name of the new group", ArgTypes.STRING);
 
     protected GroupCreateCMD() {
         super("create", "Create a new group");

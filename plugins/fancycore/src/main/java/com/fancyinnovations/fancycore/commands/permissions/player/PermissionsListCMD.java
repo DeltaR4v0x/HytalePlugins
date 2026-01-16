@@ -3,7 +3,7 @@ package com.fancyinnovations.fancycore.commands.permissions.player;
 import com.fancyinnovations.fancycore.api.permissions.Permission;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PermissionsListCMD extends CommandBase {
 
-    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg(FancyPlayerArg.NAME, FancyPlayerArg.DESCRIPTION, FancyPlayerArg.TYPE);
+    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg("target", "username or uuid of the target player", FancyCoreArgs.PLAYER);
 
     protected PermissionsListCMD() {
         super("list", "Lists permissions assigned to a player");

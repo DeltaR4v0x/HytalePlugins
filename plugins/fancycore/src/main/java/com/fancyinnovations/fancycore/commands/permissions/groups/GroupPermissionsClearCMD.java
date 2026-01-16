@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.permissions.groups;
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class GroupPermissionsClearCMD extends CommandBase {
 
-    protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
+    protected final RequiredArg<Group> groupArg = this.withRequiredArg("group", "name of the group to clear permissions in", FancyCoreArgs.GROUP);
 
     protected GroupPermissionsClearCMD() {
         super("clear", "Clears the permissions for a group");

@@ -4,7 +4,7 @@ import com.fancyinnovations.fancycore.api.inventory.Kit;
 import com.fancyinnovations.fancycore.api.inventory.KitsService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -26,8 +26,8 @@ import java.util.List;
 
 public class KitCMD extends AbstractPlayerCommand {
 
-    protected final RequiredArg<Kit> kitArg = this.withRequiredArg("kit", "the name of the kit", InventoryArgs.KIT);
-    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("target", "target player", FancyPlayerArg.TYPE);
+    protected final RequiredArg<Kit> kitArg = this.withRequiredArg("kit", "the name of the kit", FancyCoreArgs.KIT);
+    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("target", "target player", FancyCoreArgs.PLAYER);
 
     public KitCMD() {
         super("kit", "Gives the specified kit to the targeted player");

@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.chat.chatroom;
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChatRoomUnmuteCMD extends CommandBase {
 
-    protected final OptionalArg<ChatRoom> chatRoomNameArg = this.withOptionalArg(ChatRoomArg.NAME, ChatRoomArg.DESCRIPTION, ChatRoomArg.TYPE);
+    protected final OptionalArg<ChatRoom> chatRoomNameArg = this.withOptionalArg("chatoom", "name of the chatroom to unmute", FancyCoreArgs.CHATROOM);
 
     protected ChatRoomUnmuteCMD() {
         super("unmute", "Unmute the chat of a chat room");

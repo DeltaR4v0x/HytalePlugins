@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.chat.chatroom;
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChatRoomSwitchCMD extends CommandBase {
 
-    protected final RequiredArg<ChatRoom> chatRoomNameArg = this.withRequiredArg(ChatRoomArg.NAME, ChatRoomArg.DESCRIPTION, ChatRoomArg.TYPE);
+    protected final RequiredArg<ChatRoom> chatRoomNameArg = this.withRequiredArg("chatroom", "name of the chatroom to switch to", FancyCoreArgs.CHATROOM);
 
     protected ChatRoomSwitchCMD() {
         super("switch", "Switch to a chat room. You will be sending messages to this chat room");

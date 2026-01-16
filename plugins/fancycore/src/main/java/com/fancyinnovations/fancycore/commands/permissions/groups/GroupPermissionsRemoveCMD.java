@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.permissions.groups;
 import com.fancyinnovations.fancycore.api.permissions.Group;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GroupPermissionsRemoveCMD extends CommandBase {
 
-    protected final RequiredArg<Group> groupArg = this.withRequiredArg(GroupArg.NAME, GroupArg.DESCRIPTION, GroupArg.TYPE);
+    protected final RequiredArg<Group> groupArg = this.withRequiredArg("group", "name of the group tp remove permissions in", FancyCoreArgs.GROUP);
     protected final RequiredArg<String> permissionArg = this.withRequiredArg("permission", "the permission string to remove", ArgTypes.STRING);
 
     protected GroupPermissionsRemoveCMD() {

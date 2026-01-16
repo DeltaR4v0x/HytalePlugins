@@ -4,6 +4,7 @@ import com.fancyinnovations.fancycore.api.inventory.Kit;
 import com.fancyinnovations.fancycore.api.inventory.KitsService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeleteKitCMD extends CommandBase {
 
-    protected final RequiredArg<Kit> kitArg = this.withRequiredArg("kit", "the name of the kit", InventoryArgs.KIT);
+    protected final RequiredArg<Kit> kitArg = this.withRequiredArg("kit", "the name of the kit", FancyCoreArgs.KIT);
 
     public DeleteKitCMD() {
         super("deletekit", "Deletes the specified kit");

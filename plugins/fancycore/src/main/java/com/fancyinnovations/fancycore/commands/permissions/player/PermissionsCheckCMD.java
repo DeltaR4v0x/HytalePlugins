@@ -2,7 +2,7 @@ package com.fancyinnovations.fancycore.commands.permissions.player;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class PermissionsCheckCMD extends CommandBase {
 
     protected final RequiredArg<String> permissionArg = this.withRequiredArg("permission", "the permission to test", ArgTypes.STRING);
-    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("target", "the target player", FancyPlayerArg.TYPE);
+    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("target", "the target player", FancyCoreArgs.PLAYER);
 
     public PermissionsCheckCMD() {
         super("check", "Checks if you/someone has a permission");

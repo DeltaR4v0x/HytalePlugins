@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.chat.chatroom;
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.fancyinnovations.fancycore.utils.TimeUtils;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class ChatRoomInfoCMD extends CommandBase {
 
-    protected final OptionalArg<ChatRoom> chatRoomNameArg = this.withOptionalArg(ChatRoomArg.NAME, ChatRoomArg.DESCRIPTION, ChatRoomArg.TYPE);
+    protected final OptionalArg<ChatRoom> chatRoomNameArg = this.withOptionalArg("chatroom", "name of the chatroom to gather information about", FancyCoreArgs.CHATROOM);
 
     protected ChatRoomInfoCMD() {
         super("info", "Get information about a chat room");

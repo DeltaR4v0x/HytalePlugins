@@ -3,6 +3,7 @@ package com.fancyinnovations.fancycore.commands.chat.chatroom;
 import com.fancyinnovations.fancycore.api.chat.ChatRoom;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.fancyinnovations.fancycore.utils.TimeUtils;
 import com.hypixel.hytale.server.core.Message;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class ChatRoomCooldownCMD extends CommandBase {
 
     protected final RequiredArg<Float> cooldownArg = this.withRequiredArg("cooldown", "The cooldown in seconds", ArgTypes.FLOAT);
-    protected final OptionalArg<ChatRoom> chatRoomNameArg = this.withOptionalArg(ChatRoomArg.NAME, ChatRoomArg.DESCRIPTION, ChatRoomArg.TYPE);
+    protected final OptionalArg<ChatRoom> chatRoomNameArg = this.withOptionalArg("chatroom", "name of the chatroom to change the cooldown in", FancyCoreArgs.CHATROOM);
 
     protected ChatRoomCooldownCMD() {
         super("cooldown", "Set the chat cooldown for a chat room");

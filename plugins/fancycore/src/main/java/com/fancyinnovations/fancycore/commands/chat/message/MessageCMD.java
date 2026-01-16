@@ -4,7 +4,7 @@ import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.events.chat.PrivateMessageSentEvent;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MessageCMD extends CommandBase {
 
-    protected final RequiredArg<FancyPlayer> receiverArg = this.withRequiredArg("receiver", "The player to send the message to", FancyPlayerArg.TYPE);
+    protected final RequiredArg<FancyPlayer> receiverArg = this.withRequiredArg("receiver", "The player to send the message to", FancyCoreArgs.PLAYER);
     protected final RequiredArg<List<String>> messageArg = this.withListRequiredArg("message", "The message to send", ArgTypes.STRING);
 
     public MessageCMD() {

@@ -2,18 +2,18 @@ package com.fancyinnovations.fancycore.commands.inventory;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.event.EventRegistration;
+import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.windows.ContainerWindow;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.event.EventRegistration;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer.ItemContainerChangeEvent;
 import com.hypixel.hytale.server.core.inventory.container.SimpleItemContainer;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OpenInventoryCMD extends AbstractPlayerCommand {
 
-    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg("player", "target player", FancyPlayerArg.TYPE);
+    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg("player", "target player", FancyCoreArgs.PLAYER);
 
     public OpenInventoryCMD() {
         super("openinventory", "Opens the inventory of the targeted player");

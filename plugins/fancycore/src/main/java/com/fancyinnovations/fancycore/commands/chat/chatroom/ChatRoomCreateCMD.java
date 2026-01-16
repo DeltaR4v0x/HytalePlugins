@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChatRoomCreateCMD extends CommandBase {
 
-    protected final RequiredArg<String> chatRoomNameArg = this.withRequiredArg(ChatRoomArg.NAME, ChatRoomArg.DESCRIPTION, ArgTypes.STRING);
+    protected final RequiredArg<String> chatRoomNameArg = this.withRequiredArg("chatroom", "name of the new chatroom", ArgTypes.STRING);
 
     protected ChatRoomCreateCMD() {
         super("create", "Create a new chat room");

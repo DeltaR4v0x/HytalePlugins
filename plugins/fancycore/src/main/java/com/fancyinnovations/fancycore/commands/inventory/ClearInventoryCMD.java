@@ -2,7 +2,7 @@ package com.fancyinnovations.fancycore.commands.inventory;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ClearInventoryCMD extends AbstractPlayerCommand {
 
-    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("player", "target player", FancyPlayerArg.TYPE);
+    protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("player", "target player", FancyCoreArgs.PLAYER);
 
     public ClearInventoryCMD() {
         super("clearinventory", "Clears the inventory of the targeted player(s)");

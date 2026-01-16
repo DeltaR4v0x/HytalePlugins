@@ -2,7 +2,7 @@ package com.fancyinnovations.fancycore.commands.chat.message;
 
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
-import com.fancyinnovations.fancycore.commands.player.FancyPlayerArg;
+import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class IgnoreCMD extends CommandBase {
 
-    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg("target", "The player to ignore", FancyPlayerArg.TYPE);
+    protected final RequiredArg<FancyPlayer> targetArg = this.withRequiredArg("target", "The player to ignore", FancyCoreArgs.PLAYER);
 
     public IgnoreCMD() {
         super("ignore", "Ignore a player to stop receiving their messages.");
