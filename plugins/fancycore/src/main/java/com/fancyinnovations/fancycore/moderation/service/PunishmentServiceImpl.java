@@ -11,6 +11,8 @@ import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.fancyinnovations.fancycore.moderation.PlayerReportImpl;
 import com.fancyinnovations.fancycore.moderation.PunishmentImpl;
 import com.fancyinnovations.fancycore.translations.TranslationService;
+import com.fancyinnovations.fancycore.utils.TimeUtils;
+import com.hypixel.hytale.server.core.universe.Universe;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +36,6 @@ public class PunishmentServiceImpl implements PunishmentService {
                 .addMessage("punishments.mute.temp.success", "Successfully temporarily muted {player} for: {reason}. Duration: {duration}.")
 
                 .addMessage("punishments.kick.default_reason", "You have been kicked from the server for: {reason}.")
-                .addMessage("punishments.kick.success", "Successfully kicked {player} for: {reason}.")
 
                 .addMessage("punishments.ban.perm.default_reason", "You have been banned from the server for: {reason}.")
                 .addMessage("punishments.ban.perm.success", "Successfully banned {player} for: {reason}.")
@@ -98,13 +99,13 @@ public class PunishmentServiceImpl implements PunishmentService {
         if (durationMillis > 0) {
             translator.getMessage("punishments.mute.temp.default_reason")
                     .replace("{reason}", reason)
-                    .replace("{duration}", String.valueOf(durationMillis / 1000) + " seconds")
+                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
                     .sendTo(player);
 
             translator.getMessage("punishments.mute.temp.success")
                     .replace("{player}", player.getData().getUsername())
                     .replace("{reason}", reason)
-                    .replace("{duration}", String.valueOf(durationMillis / 1000) + " seconds")
+                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
                     .sendTo(staff);
         } else {
             translator.getMessage("punishments.mute.perm.default_reason")
@@ -144,15 +145,12 @@ public class PunishmentServiceImpl implements PunishmentService {
         storage.createPunishment(punishment);
 
         String kickMessage = translator.getMessage("punishments.kick.default_reason")
-                .replace("{reason}", reason)
+                .replace("reason", reason)
                 .getParsedMessage();
 
-        translator.getMessage("punishments.kick.success")
-                .replace("{player}", player.getData().getUsername())
-                .replace("{reason}", reason)
-                .sendTo(staff);
-
-        player.getPlayer().getPacketHandler().disconnect(kickMessage);
+        Universe.get().getWorld(player.getPlayer().getWorldUuid()).execute(() -> {
+            player.getPlayer().getPacketHandler().disconnect(kickMessage);
+        });
 
         return punishment;
     }
@@ -181,13 +179,13 @@ public class PunishmentServiceImpl implements PunishmentService {
         if (durationMillis > 0) {
             kickMessage = translator.getMessage("punishments.ban.temp.default_reason")
                     .replace("{reason}", reason)
-                    .replace("{duration}", String.valueOf(durationMillis / 1000) + " seconds")
+                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
                     .getParsedMessage();
 
             translator.getMessage("punishments.ban.temp.success")
                     .replace("{player}", player.getData().getUsername())
                     .replace("{reason}", reason)
-                    .replace("{duration}", String.valueOf(durationMillis / 1000) + " seconds")
+                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
                     .sendTo(staff);
         } else {
             kickMessage = translator.getMessage("punishments.ban.perm.default_reason")

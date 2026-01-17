@@ -4,6 +4,7 @@ import com.fancyinnovations.fancycore.api.moderation.PlayerReport;
 import com.fancyinnovations.fancycore.api.moderation.Punishment;
 import com.fancyinnovations.fancycore.api.moderation.PunishmentStorage;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
+import com.fancyinnovations.fancycore.moderation.PunishmentImpl;
 import de.oliver.fancyanalytics.logger.properties.StringProperty;
 import de.oliver.fancyanalytics.logger.properties.ThrowableProperty;
 import de.oliver.jdb.JDB;
@@ -42,7 +43,8 @@ public class PunishmentJsonStorage implements PunishmentStorage {
     @Override
     public List<Punishment> getPunishmentsForPlayer(UUID player) {
         try {
-            return punishmentDB.getAll(player.toString(), Punishment.class);
+            List<PunishmentImpl> all = punishmentDB.getAll(player.toString(), PunishmentImpl.class);
+            return new ArrayList<>(all);
         } catch (IOException e) {
             FancyCorePlugin.get().getFancyLogger().error(
                     "Failed to load Punishments for player",
@@ -73,7 +75,7 @@ public class PunishmentJsonStorage implements PunishmentStorage {
     @Override
     public void createReport(PlayerReport report) {
         try {
-            reportDB.set(report.id().toString(), report);
+            reportDB.set(report.id().toString(), JsonReport.from(report));
         } catch (IOException e) {
             FancyCorePlugin.get().getFancyLogger().error(
                     "Failed to store PlayerReport",
@@ -86,7 +88,12 @@ public class PunishmentJsonStorage implements PunishmentStorage {
     @Override
     public List<PlayerReport> getAllReports() {
         try {
-            return reportDB.getAll("", PlayerReport.class);
+            List<JsonReport> all = reportDB.getAll("", JsonReport.class);
+            List<PlayerReport> reports = new ArrayList<>();
+            for (JsonReport jsonReport : all) {
+                reports.add(jsonReport.toPlayerReport());
+            }
+            return reports;
         } catch (IOException e) {
             FancyCorePlugin.get().getFancyLogger().error(
                     "Failed to load PlayerReports",

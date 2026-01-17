@@ -30,6 +30,7 @@ import com.fancyinnovations.fancycore.commands.economy.*;
 import com.fancyinnovations.fancycore.commands.economy.currency.CurrencyCMD;
 import com.fancyinnovations.fancycore.commands.fancycore.FancyCoreCMD;
 import com.fancyinnovations.fancycore.commands.inventory.*;
+import com.fancyinnovations.fancycore.commands.moderation.KickCMD;
 import com.fancyinnovations.fancycore.commands.permissions.groups.GroupCMD;
 import com.fancyinnovations.fancycore.commands.permissions.player.PermissionsCMD;
 import com.fancyinnovations.fancycore.commands.player.PlayerListCMD;
@@ -352,6 +353,9 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new AddMoneyCMD());
         CommandManager.get().register(new RemoveMoneyCMD());
         CommandManager.get().register(new SetMoneyCMD());
+
+        // moderation
+        CommandManager.get().register(new KickCMD());
     }
 
     public void registerListeners() {
