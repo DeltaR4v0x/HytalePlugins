@@ -31,6 +31,7 @@ import com.fancyinnovations.fancycore.commands.economy.currency.CurrencyCMD;
 import com.fancyinnovations.fancycore.commands.fancycore.FancyCoreCMD;
 import com.fancyinnovations.fancycore.commands.inventory.*;
 import com.fancyinnovations.fancycore.commands.moderation.KickCMD;
+import com.fancyinnovations.fancycore.commands.moderation.MuteCMD;
 import com.fancyinnovations.fancycore.commands.permissions.groups.GroupCMD;
 import com.fancyinnovations.fancycore.commands.permissions.player.PermissionsCMD;
 import com.fancyinnovations.fancycore.commands.player.PlayerListCMD;
@@ -356,6 +357,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
         // moderation
         CommandManager.get().register(new KickCMD());
+        CommandManager.get().register(new MuteCMD());
     }
 
     public void registerListeners() {

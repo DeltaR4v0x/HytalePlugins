@@ -28,21 +28,11 @@ public class PunishmentServiceImpl implements PunishmentService {
 
         translator
                 .addMessage("punishments.warning.default_reason", "You have been warned for: {reason}.")
-                .addMessage("punishments.warning.success", "Successfully warned {player} for: {reason}.")
-
                 .addMessage("punishments.mute.perm.default_reason", "You have been muted for: {reason}.")
-                .addMessage("punishments.mute.perm.success", "Successfully muted {player} for: {reason}.")
                 .addMessage("punishments.mute.temp.default_reason", "You have been temporarily muted for: {reason}. Duration: {duration}.")
-                .addMessage("punishments.mute.temp.success", "Successfully temporarily muted {player} for: {reason}. Duration: {duration}.")
-
                 .addMessage("punishments.kick.default_reason", "You have been kicked from the server for: {reason}.")
-
                 .addMessage("punishments.ban.perm.default_reason", "You have been banned from the server for: {reason}.")
-                .addMessage("punishments.ban.perm.success", "Successfully banned {player} for: {reason}.")
                 .addMessage("punishments.ban.temp.default_reason", "You have been temporarily banned from the server for: {reason}. Duration: {duration}.")
-                .addMessage("punishments.ban.temp.success", "Successfully temporarily banned {player} for: {reason}. Duration: {duration}.")
-
-                .addMessage("punishments.report.successfully_reported", "You have reported {reported} for: {reason}.\nOur staff will review your report soon.")
         ;
     }
 
@@ -65,13 +55,8 @@ public class PunishmentServiceImpl implements PunishmentService {
         storage.createPunishment(punishment);
 
         translator.getMessage("punishments.warning.default_reason")
-                .replace("{reason}", reason)
+                .replace("reason", reason)
                 .sendTo(player);
-
-        translator.getMessage("punishments.warning.success")
-                .replace("{player}", player.getData().getUsername())
-                .replace("{reason}", reason)
-                .sendTo(staff);
 
         return punishment;
     }
@@ -98,24 +83,13 @@ public class PunishmentServiceImpl implements PunishmentService {
 
         if (durationMillis > 0) {
             translator.getMessage("punishments.mute.temp.default_reason")
-                    .replace("{reason}", reason)
-                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
+                    .replace("reason", reason)
+                    .replace("duration", TimeUtils.formatTime(durationMillis))
                     .sendTo(player);
-
-            translator.getMessage("punishments.mute.temp.success")
-                    .replace("{player}", player.getData().getUsername())
-                    .replace("{reason}", reason)
-                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
-                    .sendTo(staff);
         } else {
             translator.getMessage("punishments.mute.perm.default_reason")
-                    .replace("{reason}", reason)
+                    .replace("reason", reason)
                     .sendTo(player);
-
-            translator.getMessage("punishments.mute.perm.success")
-                    .replace("{player}", player.getData().getUsername())
-                    .replace("{reason}", reason)
-                    .sendTo(staff);
         }
 
         return punishment;
@@ -178,24 +152,13 @@ public class PunishmentServiceImpl implements PunishmentService {
         String kickMessage;
         if (durationMillis > 0) {
             kickMessage = translator.getMessage("punishments.ban.temp.default_reason")
-                    .replace("{reason}", reason)
-                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
+                    .replace("reason", reason)
+                    .replace("duration", TimeUtils.formatTime(durationMillis))
                     .getParsedMessage();
-
-            translator.getMessage("punishments.ban.temp.success")
-                    .replace("{player}", player.getData().getUsername())
-                    .replace("{reason}", reason)
-                    .replace("{duration}", TimeUtils.formatTime(durationMillis))
-                    .sendTo(staff);
         } else {
             kickMessage = translator.getMessage("punishments.ban.perm.default_reason")
-                    .replace("{reason}", reason)
+                    .replace("reason", reason)
                     .getParsedMessage();
-
-            translator.getMessage("punishments.ban.perm.success")
-                    .replace("{player}", player.getData().getUsername())
-                    .replace("{reason}", reason)
-                    .sendTo(staff);
         }
 
         player.getPlayer().getPacketHandler().disconnect(kickMessage);
@@ -227,10 +190,5 @@ public class PunishmentServiceImpl implements PunishmentService {
         }
 
         storage.createReport(report);
-
-        translator.getMessage("punishments.report.successfully_reported")
-                .replace("{reported}", reported.getData().getUsername())
-                .replace("{reason}", reason)
-                .sendTo(staff);
     }
 }
