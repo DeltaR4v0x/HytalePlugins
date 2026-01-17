@@ -31,6 +31,14 @@ public class PunishmentFakeStorage implements PunishmentStorage {
     }
 
     @Override
+    public Punishment getPunishmentById(UUID id) {
+        return this.punishments.stream()
+                .filter(punishment -> punishment.id().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public List<Punishment> getAllPunishments() {
         return new ArrayList<>(this.punishments);
     }

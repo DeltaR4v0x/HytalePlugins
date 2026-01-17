@@ -4,6 +4,7 @@ import com.fancyinnovations.fancycore.api.FancyCore;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PunishmentService {
 
@@ -22,6 +23,18 @@ public interface PunishmentService {
     Punishment banPlayer(FancyPlayer player, FancyPlayer staff, String reason, long durationMillis);
 
     Punishment banPlayer(FancyPlayer player, FancyPlayer staff, String reason);
+
+    /**
+     * @return false if the player was not banned
+     */
+    boolean unban(FancyPlayer player);
+
+    /**
+     * @return false if the player was not muted
+     */
+    boolean unmute(FancyPlayer player);
+
+    Punishment getPunishmentById(UUID id);
 
     List<Punishment> getPunishmentsForPlayer(FancyPlayer player);
 

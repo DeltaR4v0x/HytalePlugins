@@ -172,6 +172,61 @@ public class PunishmentServiceImpl implements PunishmentService {
     }
 
     @Override
+    public boolean unban(FancyPlayer player) {
+        List<Punishment> punishments = getPunishmentsForPlayer(player);
+        for (Punishment punishment : punishments) {
+            if (punishment.type() != PunishmentType.BAN || !punishment.isActive()) {
+                continue;
+            }
+
+            Punishment updatedPunishment = new PunishmentImpl(
+                    punishment.id(),
+                    punishment.player(),
+                    punishment.type(),
+                    punishment.reason(),
+                    punishment.issuedAt(),
+                    punishment.issuedBy(),
+                    System.currentTimeMillis() - 1000
+            );
+            storage.createPunishment(updatedPunishment);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean unmute(FancyPlayer player) {
+        List<Punishment> punishments = getPunishmentsForPlayer(player);
+        for (Punishment punishment : punishments) {
+            if (punishment.type() != PunishmentType.MUTE || !punishment.isActive()) {
+                continue;
+            }
+
+            Punishment updatedPunishment = new PunishmentImpl(
+                    punishment.id(),
+                    punishment.player(),
+                    punishment.type(),
+                    punishment.reason(),
+                    punishment.issuedAt(),
+                    punishment.issuedBy(),
+                    System.currentTimeMillis() - 1000
+            );
+            storage.createPunishment(updatedPunishment);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public Punishment getPunishmentById(UUID id) {
+        return storage.getPunishmentById(id);
+    }
+
+    @Override
     public List<Punishment> getPunishmentsForPlayer(FancyPlayer player) {
         return storage.getPunishmentsForPlayer(player.getData().getUUID());
     }

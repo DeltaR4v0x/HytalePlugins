@@ -57,6 +57,32 @@ public class PunishmentJsonStorage implements PunishmentStorage {
     }
 
     @Override
+    public Punishment getPunishmentById(UUID id) {
+        File dir = new File(PUNISHMENTS_DATA_DIR_PATH);
+        File[] playerDirs = dir.listFiles(File::isDirectory);
+        if (playerDirs == null) {
+            return null;
+        }
+
+        for (File playerDir : playerDirs) {
+            File punishmentFile = new File(playerDir, id.toString() + ".json");
+            if (punishmentFile.exists()) {
+                try {
+                    return punishmentDB.get(playerDir.getName() + "/" + id.toString(), PunishmentImpl.class);
+                } catch (IOException e) {
+                    FancyCorePlugin.get().getFancyLogger().error(
+                            "Failed to load Punishment by ID",
+                            StringProperty.of("id", id.toString()),
+                            ThrowableProperty.of(e)
+                    );
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Punishment> getAllPunishments() {
         File dir = new File(PUNISHMENTS_DATA_DIR_PATH);
         File[] playerDirs = dir.listFiles(File::isDirectory);
