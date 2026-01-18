@@ -358,6 +358,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new AddMoneyCMD());
         CommandManager.get().register(new RemoveMoneyCMD());
         CommandManager.get().register(new SetMoneyCMD());
+        CommandManager.get().register(new BalanceTopCMD());
 
         // moderation
         CommandManager.get().register(new ReportCMD());

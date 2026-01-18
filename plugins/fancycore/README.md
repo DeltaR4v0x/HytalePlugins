@@ -72,11 +72,13 @@ Commands:
 - `/<currency> add <target> <amount>`
 - `/<currency> remove <target> <amount>`
 - `/<currency> set <target> <amount>`
+- `/<currency> top`
 - `/balance [--target=?]` (the primary currency will be used in the following commands)
 - `/pay <target> <amount>`
 - `/addmoney <target> <amount>`
 - `/removemoney <target> <amount>`
 - `/setmoney <target> <amount>`
+- `/balancetop`
 
 ### Punishment System
 

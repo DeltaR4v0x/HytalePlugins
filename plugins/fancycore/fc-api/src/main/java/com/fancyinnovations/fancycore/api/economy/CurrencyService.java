@@ -20,4 +20,6 @@ public interface CurrencyService {
 
     Currency getPrimaryCurrency();
 
+    List<LeaderboardEntry> getTopBalances(Currency currency, int limit);
+
 }

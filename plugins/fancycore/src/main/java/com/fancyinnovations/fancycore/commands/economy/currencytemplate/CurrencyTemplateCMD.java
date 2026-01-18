@@ -15,6 +15,7 @@ public class CurrencyTemplateCMD extends AbstractCommandCollection {
         addSubCommand(new CurrencyTemplateAddCMD(currency));
         addSubCommand(new CurrencyTemplateRemoveCMD(currency));
         addSubCommand(new CurrencyTemplateSetCMD(currency));
+        addSubCommand(new CurrencyTemplateTopCMD(currency));
     }
 
 }
