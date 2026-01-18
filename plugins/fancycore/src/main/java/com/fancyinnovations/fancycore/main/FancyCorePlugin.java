@@ -332,7 +332,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new PlayerListCMD());
         CommandManager.get().register(new PlaytimeCMD());
         CommandManager.get().register(new GameModeCMD());
-        CommandManager.get().register(new GMECMD());
+        CommandManager.get().register(new GMACMD());
         CommandManager.get().register(new GMCCMD());
         CommandManager.get().register(new FlyCMD());
         CommandManager.get().register(new SpeedCMD());

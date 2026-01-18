@@ -17,12 +17,12 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.jetbrains.annotations.NotNull;
 
-public class GMECMD extends AbstractPlayerCommand {
+public class GMACMD extends AbstractPlayerCommand {
 
     protected final OptionalArg<FancyPlayer> targetArg = this.withOptionalArg("player", "Target player", FancyCoreArgs.PLAYER);
 
-    public GMECMD() {
-        super("gme", "Changes the gamemode of a player to adventure mode");
+    public GMACMD() {
+        super("gma", "Changes the gamemode of a player to adventure mode");
         requirePermission("fancycore.commands.gamemode");
     }
 

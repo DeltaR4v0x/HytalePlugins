@@ -161,8 +161,20 @@ Commands:
 ### Player Utilities
 
 Commands:
-- `/playerlist`
+- `/gamemode <gamemode> [--target=?]`
+- `/gmc [--target=?]`
+- `/gma [--target=?]`
+- `/fly [--target=?]`
+- `/feed [--target=?]`
+- `/heal [--target=?]`
+- `/god [--target=?]`
+- `/vanish [--target=?]`
+- `/speed [--spped=?]`
+- `/near [--radius=?]`
+- `/seen <target>`
 - `/playtime [--target=?]`
+- `/ping [--target=?]`
+- `/playerlist`
 
 ### Plugin commands
 
