@@ -68,11 +68,11 @@ public class SetHomeCMD extends AbstractWorldCommand {
             rotation = headRotationComponent.getRotation();
         }
 
-        int maxHomes = -1;
+        double maxHomes = -1;
         for (Group group : fp.getData().getGroupSortedByWeight()) {
             Object val = group.getMetadataValueInherited("max_homes");
             if (val != null) {
-                maxHomes = (int) ((double) val);
+                maxHomes = Double.parseDouble(val.toString());
                 break;
             }
         }

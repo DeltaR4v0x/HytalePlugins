@@ -44,11 +44,11 @@ public class CreateBackpackCMD extends CommandBase {
             return;
         }
 
-        int maxBackpacks = -1;
+        double maxBackpacks = -1;
         for (Group group : fp.getData().getGroupSortedByWeight()) {
             Object val = group.getMetadataValueInherited("max_backpacks");
             if (val != null) {
-                maxBackpacks = (int) ((double) val);
+                maxBackpacks = Double.parseDouble(val.toString());
                 break;
             }
         }
