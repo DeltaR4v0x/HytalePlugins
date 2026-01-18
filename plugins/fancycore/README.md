@@ -51,6 +51,10 @@ Commands:
 - `/groups parents add <group> <parent>`
 - `/groups parents remove <group> <parent>`
 - `/groups parents clear <group>`
+- `/group metadata list <group>`
+- `/group metadata set <group> <key> <value>`
+- `/group metadata remove <group> <key>`
+- `/group metadata clear <group>`
 - `/groups members list <group>`
 - `/groups members add <group> <target>`
 - `/groups members remove <group> <target>`

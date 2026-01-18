@@ -19,6 +19,7 @@ public class GroupCMD extends AbstractCommandCollection {
         addSubCommand(new GroupSetWeightCMD());
         addSubCommand(new GroupPermissionsCMD());
         addSubCommand(new GroupParentsCMD());
+        addSubCommand(new GroupMetadataCMD());
         addSubCommand(new GroupMembersCMD());
     }
 }
