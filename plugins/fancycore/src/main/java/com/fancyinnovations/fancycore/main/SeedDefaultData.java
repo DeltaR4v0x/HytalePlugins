@@ -171,7 +171,7 @@ public class SeedDefaultData {
                 "Right",
                 300,
                 250,
-                300,
+                330,
                 new ScoreboardPage.BackgroundColor((byte) 50, (byte) 0, (byte) 0, (byte) 0),
                 new ArrayList<>()
         );
@@ -195,6 +195,15 @@ public class SeedDefaultData {
         ));
         defaultPage.addLine(new ScoreboardLineImpl(
                 "&6Player: &e%player_name%",
+                null,
+                null,
+                null,
+                5,
+                10,
+                null
+        ));
+        defaultPage.addLine(new ScoreboardLineImpl(
+                "&6World: &e%player_world%",
                 null,
                 null,
                 null,

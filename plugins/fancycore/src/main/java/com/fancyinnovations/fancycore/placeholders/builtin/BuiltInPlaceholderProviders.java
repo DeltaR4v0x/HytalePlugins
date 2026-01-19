@@ -2,6 +2,8 @@ package com.fancyinnovations.fancycore.placeholders.builtin;
 
 import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
 import com.fancyinnovations.fancycore.placeholders.builtin.player.*;
+import com.fancyinnovations.fancycore.placeholders.builtin.server.ServerMaxPlayersPlaceholder;
+import com.fancyinnovations.fancycore.placeholders.builtin.server.ServerOnlinePlayersPlaceholder;
 
 public class BuiltInPlaceholderProviders {
 
@@ -20,6 +22,12 @@ public class BuiltInPlaceholderProviders {
         PlaceholderService.get().registerProvider(PlayerPlayTimeFormattedPlaceholder.INSTANCE);
         PlaceholderService.get().registerProvider(PlayerPlayTimeMsPlaceholder.INSTANCE);
         PlaceholderService.get().registerProvider(PlayerUuidPlaceholder.INSTANCE);
+        PlaceholderService.get().registerProvider(PlayerWorldPlaceholder.INSTANCE);
+
+        // Server placeholders
+        PlaceholderService.get().registerProvider(ServerMaxPlayersPlaceholder.INSTANCE);
+        PlaceholderService.get().registerProvider(ServerOnlinePlayersPlaceholder.INSTANCE);
+
     }
 
 }
