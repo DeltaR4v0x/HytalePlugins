@@ -32,9 +32,9 @@ public class PlayerLeaveListener {
             onlinePlayer.sendMessage(leaveMsg);
         }
 
+        FancyCorePlugin.get().getScoreboardServiceImpl().detachScoreboard(fp);
+
         fp.setPlayer(null);
         new PlayerLeftEvent(fp).fire();
-
-        FancyCorePlugin.get().getScoreboardServiceImpl().detachScoreboard(fp);
     }
 }

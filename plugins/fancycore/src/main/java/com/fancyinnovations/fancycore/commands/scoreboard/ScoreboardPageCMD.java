@@ -17,5 +17,6 @@ public class ScoreboardPageCMD extends AbstractCommandCollection {
         addSubCommand(new ScoreboardPageSetOffsetCMD());
         addSubCommand(new ScoreboardPageSetBackgroundColorCMD());
         addSubCommand(new ScoreboardPageSetOpacityCMD());
+        addSubCommand(new ScoreboardPageLinesCMD());
     }
 }
