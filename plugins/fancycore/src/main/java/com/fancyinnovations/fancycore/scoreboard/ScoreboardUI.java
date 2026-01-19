@@ -4,7 +4,9 @@ import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.fancyinnovations.fancycore.utils.ColorUtils;
+import com.hypixel.hytale.protocol.ColorAlpha;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.asset.util.ColorParseUtil;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import de.oliver.fancyanalytics.logger.properties.ThrowableProperty;
@@ -56,6 +58,14 @@ public class ScoreboardUI extends CustomUIHud {
 
         setAnchorForPanel(builder, "#ScoreboardPanel.Anchor", currentPage.getOffset(), currentPage.getWidth(), currentPage.getHeight());
         setLayoutMode(builder, currentPage.getAlignment());
+
+        ColorAlpha bgColor = new ColorAlpha(
+                currentPage.getBackgroundColor().alpha(),
+                currentPage.getBackgroundColor().red(),
+                currentPage.getBackgroundColor().green(),
+                currentPage.getBackgroundColor().blue()
+        );
+        setBackgroundColor(builder, "#ScoreboardPanel.Background", ColorParseUtil.colorToHexAlphaString(bgColor));
 
         int i = 0;
         for (ScoreboardLine line : currentPage.getLines()) {
@@ -172,6 +182,21 @@ public class ScoreboardUI extends CustomUIHud {
         } catch (Exception e) {
             FancyCorePlugin.get().getFancyLogger().info(
                     "Failed to set layout mode via reflection",
+                    ThrowableProperty.of(e)
+            );
+        }
+    }
+
+    private void setBackgroundColor(UICommandBuilder builder, String selector, String color) {
+        BsonString colorValue = new BsonString(color);
+
+        try {
+            if (this.setBsonValueMethod != null) {
+                this.setBsonValueMethod.invoke(builder, selector, colorValue);
+            }
+        } catch (Exception e) {
+            FancyCorePlugin.get().getFancyLogger().info(
+                    "Failed to set background color via reflection",
                     ThrowableProperty.of(e)
             );
         }

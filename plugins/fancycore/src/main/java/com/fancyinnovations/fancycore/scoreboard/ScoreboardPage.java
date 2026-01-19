@@ -9,14 +9,16 @@ public class ScoreboardPage {
     private int offset;
     private int width;
     private int height;
+    private BackgroundColor backgroundColor;
     private List<ScoreboardLine> lines;
 
-    public ScoreboardPage(String name, String alignment, int offset, int width, int height, List<ScoreboardLine> lines) {
+    public ScoreboardPage(String name, String alignment, int offset, int width, int height, BackgroundColor backgroundColor, List<ScoreboardLine> lines) {
         this.name = name;
         this.alignment = alignment;
         this.offset = offset;
         this.width = width;
         this.height = height;
+        this.backgroundColor = backgroundColor;
         this.lines = lines;
     }
 
@@ -56,6 +58,14 @@ public class ScoreboardPage {
         this.height = height;
     }
 
+    public BackgroundColor getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(BackgroundColor backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
     public List<ScoreboardLine> getLines() {
         return lines;
     }
@@ -70,6 +80,14 @@ public class ScoreboardPage {
 
     public void removeLine(ScoreboardLine line) {
         this.lines.remove(line);
+    }
+
+    public record BackgroundColor(
+        byte alpha,
+        byte red,
+        byte green,
+        byte blue
+    ) {
     }
 
 }

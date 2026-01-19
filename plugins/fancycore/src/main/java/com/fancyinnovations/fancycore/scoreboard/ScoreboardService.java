@@ -74,6 +74,7 @@ public class ScoreboardService {
                 250,
                 400,
                 200,
+                new ScoreboardPage.BackgroundColor((byte) 50, (byte) 179, (byte) 152, (byte) 36),
                 lines
         );
 
