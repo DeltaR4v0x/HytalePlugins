@@ -10,6 +10,9 @@
   "Dependencies": {
     "Hytale:I18nModule": "*"
   },
+  "OptionalDependencies": {
+    "LuckPerms:LuckPerms": "*"
+  },
   "Authors": [
     {
       "Name": "Oliver Schlueter",
