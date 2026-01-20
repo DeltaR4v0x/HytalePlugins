@@ -1,6 +1,9 @@
 package com.fancyinnovations.fancycore.placeholders.builtin;
 
 import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
+import com.fancyinnovations.fancycore.placeholders.builtin.luckperms.LPPrefixPlaceholder;
+import com.fancyinnovations.fancycore.placeholders.builtin.luckperms.LPPrimaryGroupNamePlaceholder;
+import com.fancyinnovations.fancycore.placeholders.builtin.luckperms.LPSuffixPlaceholder;
 import com.fancyinnovations.fancycore.placeholders.builtin.player.*;
 import com.fancyinnovations.fancycore.placeholders.builtin.server.ServerMaxPlayersPlaceholder;
 import com.fancyinnovations.fancycore.placeholders.builtin.server.ServerOnlinePlayersPlaceholder;
@@ -28,6 +31,10 @@ public class BuiltInPlaceholderProviders {
         PlaceholderService.get().registerProvider(ServerMaxPlayersPlaceholder.INSTANCE);
         PlaceholderService.get().registerProvider(ServerOnlinePlayersPlaceholder.INSTANCE);
 
+        // LuckPerms placeholders
+         PlaceholderService.get().registerProvider(LPPrefixPlaceholder.INSTANCE);
+         PlaceholderService.get().registerProvider(LPSuffixPlaceholder.INSTANCE);
+         PlaceholderService.get().registerProvider(LPPrimaryGroupNamePlaceholder.INSTANCE);
     }
 
 }

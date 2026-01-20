@@ -209,7 +209,7 @@ Commands:
 
 ### Placeholders
 
-Available placeholders:
+Player placeholders:
 - `%player_name%` - Player username
 - `%player_nickname%` - Player nickname
 - `%player_playtime%` - Player play time (formatted)
@@ -224,5 +224,12 @@ Available placeholders:
 - `%player_group_prefix%` - Player group prefix
 - `%player_group_suffix%` - Player group suffix
 - `%player_world%` - Player current world
+
+Server placeholders:
 - `%online_players%` - Number of online players
 - `%max_players%` - Maximum number of players allowed
+
+LuckPerms placeholders:
+- `%luckperms_prefix%` - LuckPerms player prefix
+- `%luckperms_suffix%` - LuckPerms player suffix
+- `%luckperms_primary_group_name%` - LuckPerms primary group name
