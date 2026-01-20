@@ -1,12 +1,18 @@
 package com.fancyinnovations.fancycore.placeholders.builtin;
 
 import com.fancyinnovations.fancycore.api.placeholders.PlaceholderService;
+import com.fancyinnovations.fancycore.main.FancyCorePlugin;
 import com.fancyinnovations.fancycore.placeholders.builtin.luckperms.LPPrefixPlaceholder;
 import com.fancyinnovations.fancycore.placeholders.builtin.luckperms.LPPrimaryGroupNamePlaceholder;
 import com.fancyinnovations.fancycore.placeholders.builtin.luckperms.LPSuffixPlaceholder;
 import com.fancyinnovations.fancycore.placeholders.builtin.player.*;
 import com.fancyinnovations.fancycore.placeholders.builtin.server.ServerMaxPlayersPlaceholder;
 import com.fancyinnovations.fancycore.placeholders.builtin.server.ServerOnlinePlayersPlaceholder;
+import com.hypixel.hytale.common.plugin.PluginIdentifier;
+import com.hypixel.hytale.server.core.plugin.PluginBase;
+import com.hypixel.hytale.server.core.plugin.PluginManager;
+
+import java.util.concurrent.TimeUnit;
 
 public class BuiltInPlaceholderProviders {
 
@@ -40,9 +46,19 @@ public class BuiltInPlaceholderProviders {
         PlaceholderService.get().registerProvider(ServerOnlinePlayersPlaceholder.INSTANCE);
 
         // LuckPerms placeholders
-         PlaceholderService.get().registerProvider(LPPrefixPlaceholder.INSTANCE);
-         PlaceholderService.get().registerProvider(LPSuffixPlaceholder.INSTANCE);
-         PlaceholderService.get().registerProvider(LPPrimaryGroupNamePlaceholder.INSTANCE);
+        FancyCorePlugin.get().getThreadPool().schedule(BuiltInPlaceholderProviders::tryToRegisterLuckPermsPlaceholders, 30L, TimeUnit.SECONDS);
     }
 
+    private static boolean tryToRegisterLuckPermsPlaceholders() {
+        PluginBase luckPermsPlugin = PluginManager.get().getPlugin(PluginIdentifier.fromString("LuckPerms:LuckPerms"));
+        if (luckPermsPlugin != null && luckPermsPlugin.isEnabled()) {
+            PlaceholderService.get().registerProvider(new LPPrefixPlaceholder());
+            PlaceholderService.get().registerProvider(new LPSuffixPlaceholder());
+            PlaceholderService.get().registerProvider(new LPPrimaryGroupNamePlaceholder());
+            FancyCorePlugin.get().getFancyLogger().info("Registered LuckPerms placeholder providers");
+            return true;
+        }
+
+        return false;
+    }
 }

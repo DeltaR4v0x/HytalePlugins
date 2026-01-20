@@ -205,7 +205,6 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
         eventService = new EventServiceImpl();
         placeholderService = new PlaceholderServiceImpl();
-        BuiltInPlaceholderProviders.registerAll();
 
         translationService = new TranslationService();
 
@@ -266,6 +265,8 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         // TODO enable this once FA integration is configured
         // versionChecker.checkPluginVersionChanged(apiClient, "fc");
 
+        // register built-in placeholder providers
+        BuiltInPlaceholderProviders.registerAll();
 
         // start player schedulers
         savePlayersRunnable.schedule();
