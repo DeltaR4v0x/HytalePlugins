@@ -158,9 +158,6 @@ public class PlayerJoinListener {
             }
         }
 
-        String joinMsg = PlaceholderService.get().parse(fp, FancyCore.get().getConfig().getJoinMessage());
-        fp.sendMessage(joinMsg);
-
         UUID joiningPlayerUuid = fp.getData().getUUID();
         World playerWorld = event.getPlayer().getWorld();
         PlayerRef joiningPlayerRef = fp.getPlayer();
