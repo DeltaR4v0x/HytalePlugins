@@ -9,6 +9,8 @@ import com.fancyinnovations.fancycore.player.FancyPlayerImpl;
 import com.fancyinnovations.fancycore.player.service.FancyPlayerServiceImpl;
 import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 
+import java.util.concurrent.TimeUnit;
+
 public class PlayerLeaveListener {
 
     private final static FancyPlayerServiceImpl playerService = (FancyPlayerServiceImpl) FancyCorePlugin.get().getPlayerService();
@@ -32,9 +34,9 @@ public class PlayerLeaveListener {
             onlinePlayer.sendMessage(leaveMsg);
         }
 
-        FancyCorePlugin.get().getScoreboardServiceImpl().detachScoreboard(fp);
-
-        fp.setPlayer(null);
-        new PlayerLeftEvent(fp).fire();
+        FancyCore.get().getThreadPool().schedule(
+                () -> FancyCorePlugin.get().getScoreboardServiceImpl().detachScoreboard(fp),
+                50, TimeUnit.MILLISECONDS   // ~1 tick (50ms)
+        );
     }
 }
