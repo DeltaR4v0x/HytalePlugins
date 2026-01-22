@@ -1,0 +1,47 @@
+$C = "../Common.ui";
+
+@CustomLabelStyle = LabelStyle(
+  FontSize: 17,
+  TextColor: #bfcdd5,
+  RenderBold: true,
+  RenderUppercase: true,
+  HorizontalAlignment: Center,
+  VerticalAlignment: Center
+);
+
+@CustomStyle = TextButtonStyle(
+  Default: (Background: $C.@DefaultSquareButtonDefaultBackground, LabelStyle: @CustomLabelStyle),
+  Hovered: (Background: $C.@DefaultSquareButtonHoveredBackground, LabelStyle: @CustomLabelStyle),
+  Pressed: (Background: $C.@DefaultSquareButtonPressedBackground, LabelStyle: @CustomLabelStyle),
+  Disabled: (Background: $C.@DefaultSquareButtonDisabledBackground, LabelStyle: @CustomLabelStyle),
+  Sounds: $C.@ButtonSounds,
+);
+
+Group {
+  LayoutMode: Left;
+  Background: $C.@InputBoxBackground;
+  FlexWeight: 1;
+  Padding: (Left: 10, Top: 5, Bottom: 3);
+  Anchor: (Bottom: 5);
+
+  // LEFT SIDE
+  Group {
+    LayoutMode: Top;
+    FlexWeight: 1;
+
+    Label #Username {
+      Style: (
+        FontSize: 22,
+        RenderBold: true,
+        TextColor: #ffffff
+      );
+    }
+
+    Group {
+      LayoutMode: Left;
+
+      Label { Text: "Balance: "; Style: (FontSize: 14, RenderBold: true, TextColor: #93844c); }
+      Label #Balance { Style: (FontSize: 14, TextColor: #ffffff); }
+    }
+  }
+}
