@@ -28,6 +28,7 @@ import com.fancyinnovations.fancycore.chat.storage.json.ChatJsonStorage;
 import com.fancyinnovations.fancycore.commands.chat.BroadcastCMD;
 import com.fancyinnovations.fancycore.commands.chat.ChatColorCMD;
 import com.fancyinnovations.fancycore.commands.chat.chatroom.ChatRoomCMD;
+import com.fancyinnovations.fancycore.commands.chat.chatroom.ChatRoomsCMD;
 import com.fancyinnovations.fancycore.commands.chat.message.*;
 import com.fancyinnovations.fancycore.commands.economy.*;
 import com.fancyinnovations.fancycore.commands.economy.currency.CurrencyCMD;
@@ -343,6 +344,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
         // chat
         CommandManager.get().register(new ChatRoomCMD());
+        CommandManager.get().register(new ChatRoomsCMD());
         CommandManager.get().register(new MessageCMD());
         CommandManager.get().register(new ReplyCMD());
         CommandManager.get().register(new IgnoreCMD());
