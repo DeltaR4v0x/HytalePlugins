@@ -216,6 +216,16 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
 
         config.addField(
                 new ConfigField<>(
+                        DISABLE_PERMISSION_PROVIDER_PATH,
+                        "If true, FancyCore's permission system will be disabled.",
+                        true,
+                        false,
+                        false,
+                        Boolean.class
+                )
+        );
+        config.addField(
+                new ConfigField<>(
                         DISABLE_PERMISSION_SYSTEM_PATH,
                         "If true, FancyCore's permission system will be disabled.",
                         false,
