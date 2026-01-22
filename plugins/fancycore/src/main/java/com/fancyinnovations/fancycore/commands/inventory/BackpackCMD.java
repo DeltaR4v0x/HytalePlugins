@@ -7,25 +7,17 @@ import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
 import com.fancyinnovations.fancycore.commands.arguments.FancyCoreArgs;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.windows.ContainerWindow;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.container.SimpleItemContainer;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.UUID;
 
 public class BackpackCMD extends AbstractPlayerCommand {
 
@@ -65,49 +57,6 @@ public class BackpackCMD extends AbstractPlayerCommand {
             return;
         }
 
-        List<ItemStack> items = BackpacksService.get().getBackpackItems(target.getData().getUUID(), backpackName);
-
-        Player player = store.getComponent(ref, Player.getComponentType());
-        if (player == null) {
-            fp.sendMessage("You are not a player.");
-            return;
-        }
-
-        // Create a container with the backpack's capacity
-        SimpleItemContainer backpackContainer = new SimpleItemContainer((short) backpack.size());
-        
-        // Load items into the container
-        for (int i = 0; i < items.size() && i < backpack.size(); i++) {
-            ItemStack item = items.get(i);
-            if (item != null) {
-                backpackContainer.setItemStackForSlot((short) i, item);
-            }
-        }
-
-        UUID targetUUID = target.getData().getUUID();
-        String finalBackpackName = backpackName;
-
-        // Create and open the container window
-        ContainerWindow window = new ContainerWindow(backpackContainer);
-        
-        // Register close event to save items back to storage
-        window.registerCloseEvent(event -> {
-            // Save all items from the container back to storage
-            List<ItemStack> savedItems = new java.util.ArrayList<>();
-            for (short i = 0; i < backpackContainer.getCapacity(); i++) {
-                ItemStack item = backpackContainer.getItemStack(i);
-                if (item != null) {
-                    savedItems.add(item);
-                }
-            }
-            BackpacksService.get().setBackpackItems(targetUUID, finalBackpackName, savedItems);
-        });
-        
-        // Open the window using PageManager (this actually sends the packet)
-        if (player.getPageManager().setPageWithWindows(ref, store, Page.Bench, true, window)) {
-            fp.sendMessage("Opened backpack '" + backpackName + "' (" + backpack.size() + " slots) of " + target.getData().getUsername() + ".");
-        } else {
-            fp.sendMessage("Failed to open backpack '" + backpackName + "'.");
-        }
+        BackpacksService.get().openBackpack(fp, target, backpack);
     }
 }

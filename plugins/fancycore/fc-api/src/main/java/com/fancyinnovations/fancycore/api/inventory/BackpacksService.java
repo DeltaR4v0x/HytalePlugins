@@ -1,6 +1,7 @@
 package com.fancyinnovations.fancycore.api.inventory;
 
 import com.fancyinnovations.fancycore.api.FancyCore;
+import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface BackpacksService {
     void deleteBackpack(UUID ownerUUID, String name);
 
     void setBackpackItems(UUID ownerUUID, String name, List<ItemStack> items);
+
+    void openBackpack(FancyPlayer fp, FancyPlayer target, Backpack name);
 
 }

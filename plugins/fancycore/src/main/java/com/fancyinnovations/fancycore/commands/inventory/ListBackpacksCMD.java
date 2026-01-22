@@ -1,17 +1,20 @@
 package com.fancyinnovations.fancycore.commands.inventory;
 
-import com.fancyinnovations.fancycore.api.inventory.Backpack;
-import com.fancyinnovations.fancycore.api.inventory.BackpacksService;
 import com.fancyinnovations.fancycore.api.player.FancyPlayer;
 import com.fancyinnovations.fancycore.api.player.FancyPlayerService;
+import com.fancyinnovations.fancycore.uis.inventory.BackpacksPage;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
-import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public class ListBackpacksCMD extends CommandBase {
+public class ListBackpacksCMD extends AbstractPlayerCommand {
 
     public ListBackpacksCMD() {
         super("listbackpacks", "Lists all available backpacks");
@@ -20,7 +23,7 @@ public class ListBackpacksCMD extends CommandBase {
     }
 
     @Override
-    protected void executeSync(@NotNull CommandContext ctx) {
+    protected void execute(@NotNull CommandContext ctx, @NotNull Store<EntityStore> store, @NotNull Ref<EntityStore> ref, @NotNull PlayerRef playerRef, @NotNull World world) {
         if (!ctx.isPlayer()) {
             ctx.sendMessage(Message.raw("This command can only be executed by a player."));
             return;
@@ -32,16 +35,23 @@ public class ListBackpacksCMD extends CommandBase {
             return;
         }
 
-        List<Backpack> backpacks = BackpacksService.get().getBackpacks(fp.getData().getUUID());
-
-        if (backpacks.isEmpty()) {
-            ctx.sendMessage(Message.raw("You have no backpacks."));
+        Player player = store.getComponent(ref, Player.getComponentType());
+        if (player == null) {
+            ctx.sendMessage(Message.raw("Player component not found."));
             return;
         }
 
-        ctx.sendMessage(Message.raw("Your Backpacks:"));
-        for (Backpack backpack : backpacks) {
-            ctx.sendMessage(Message.raw("- " + backpack.name() + " (" + backpack.size() + " slots)"));
-        }
+        player.getPageManager().openCustomPage(ref, store, new BackpacksPage(playerRef));
+
+//        List<Backpack> backpacks = BackpacksService.get().getBackpacks(fp.getData().getUUID());
+//        if (backpacks.isEmpty()) {
+//            ctx.sendMessage(Message.raw("You have no backpacks."));
+//            return;
+//        }
+//
+//        ctx.sendMessage(Message.raw("Your Backpacks:"));
+//        for (Backpack backpack : backpacks) {
+//            ctx.sendMessage(Message.raw("- " + backpack.name() + " (" + backpack.size() + " slots)"));
+//        }
     }
 }

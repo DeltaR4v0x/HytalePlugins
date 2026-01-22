@@ -25,6 +25,7 @@ public class ListWarpsCMD extends AbstractPlayerCommand {
         addAliases("warps");
         requirePermission("fancycore.commands.listwarps");
     }
+
     @Override
     protected void execute(@NotNull CommandContext ctx, @NotNull Store<EntityStore> store, @NotNull Ref<EntityStore> ref, @NotNull PlayerRef playerRef, @NotNull World world) {
         if (!ctx.isPlayer()) {
