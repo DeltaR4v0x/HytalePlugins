@@ -61,16 +61,6 @@ public class WarpsPage extends InteractiveCustomUIPage<LocationUIData> {
     public void handleDataEvent(@NotNull Ref<EntityStore> ref, @NotNull Store<EntityStore> store, @NotNull LocationUIData data) {
         super.handleDataEvent(ref, store, data);
 
-        Warp warp = WarpService.get().getWarp(data.getLocationName());
-        if (warp == null) {
-            return;
-        }
-
-        Player player = store.getComponent(ref, Player.getComponentType());
-        if (player == null) {
-            return;
-        }
-
         UUIDComponent uuidComponent = store.getComponent(ref, UUIDComponent.getComponentType());
         if (uuidComponent == null) {
             return;
@@ -78,6 +68,17 @@ public class WarpsPage extends InteractiveCustomUIPage<LocationUIData> {
 
         FancyPlayer fp = FancyPlayerService.get().getByUUID(uuidComponent.getUuid());
         if (fp == null) {
+            return;
+        }
+
+        Warp warp = WarpService.get().getWarp(data.getLocationName());
+        if (warp == null) {
+            fp.sendMessage("Warp not found: " + data.getLocationName());
+            return;
+        }
+
+        Player player = store.getComponent(ref, Player.getComponentType());
+        if (player == null) {
             return;
         }
 
@@ -89,9 +90,7 @@ public class WarpsPage extends InteractiveCustomUIPage<LocationUIData> {
         Teleport teleport = new Teleport(targetWorld, warp.location().positionVec(), warp.location().rotationVec());
         store.addComponent(ref, Teleport.getComponentType(), teleport);
 
-
-        player.getPageManager().setPage(ref, store, Page.None);
-
         fp.sendMessage("Teleported to warp: " + warp.name());
+        player.getPageManager().setPage(ref, store, Page.None);
     }
 }

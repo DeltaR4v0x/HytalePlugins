@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg;
 import com.hypixel.hytale.server.core.command.system.basecommands.CommandBase;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatRoomSwitchCMD extends CommandBase {
@@ -33,6 +34,11 @@ public class ChatRoomSwitchCMD extends CommandBase {
         }
 
         ChatRoom chatRoom = chatRoomNameArg.get(ctx);
+
+        if (!PermissionsModule.get().hasPermission(fp.getData().getUUID(), "fancycore.chatrooms." + chatRoom.getName())) {
+            fp.sendMessage("You do not have permission to join this chatroom: " + chatRoom.getName());
+            return;
+        }
 
         if (!chatRoom.getWatchers().contains(fp)) {
             chatRoom.startWatching(fp);

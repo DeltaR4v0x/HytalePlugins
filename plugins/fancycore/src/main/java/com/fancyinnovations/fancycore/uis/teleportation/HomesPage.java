@@ -87,6 +87,7 @@ public class HomesPage extends InteractiveCustomUIPage<LocationUIData> {
 
         Home home = fp.getData().getHome(data.getLocationName());
         if (home == null) {
+            fp.sendMessage("Home not found: " + data.getLocationName());
             return;
         }
 
@@ -98,9 +99,7 @@ public class HomesPage extends InteractiveCustomUIPage<LocationUIData> {
         Teleport teleport = new Teleport(targetWorld, home.location().positionVec(), home.location().rotationVec());
         store.addComponent(ref, Teleport.getComponentType(), teleport);
 
-
-        player.getPageManager().setPage(ref, store, Page.None);
-
         fp.sendMessage("Teleported to home: " + home.name());
+        player.getPageManager().setPage(ref, store, Page.None);
     }
 }
