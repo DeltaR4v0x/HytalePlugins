@@ -212,7 +212,17 @@ public class PlayerJoinListener {
         String defaultScoreboardPageName = FancyCorePlugin.get().getConfig().getDefaultScoreboardPageName();
         if (defaultScoreboardPageName != null && !defaultScoreboardPageName.isEmpty()) {
             ScoreboardPage defaultPage = ScoreboardService.get().getPage(defaultScoreboardPageName);
-            FancyCorePlugin.get().getScoreboardServiceImpl().attachScoreboard(fp, defaultPage);
+
+            if (defaultPage != null) {
+                FancyCorePlugin.get().getScoreboardServiceImpl().attachScoreboard(fp, defaultPage);
+            } else {
+                FancyCorePlugin.get().getFancyLogger().warn(
+                        "The configured '" + defaultScoreboardPageName + "' scoreboard page does not exist → scoreboard not attached for " + fp.getPlayer().getUsername());
+            }
+        } else {
+            FancyCorePlugin.get().getFancyLogger().warn(
+                    "No default scoreboard page configured (empty config) → scoreboard not attached"
+            );
         }
     }
 

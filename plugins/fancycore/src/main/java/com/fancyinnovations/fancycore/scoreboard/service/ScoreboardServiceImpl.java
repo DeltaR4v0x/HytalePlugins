@@ -34,8 +34,20 @@ public class ScoreboardServiceImpl implements ScoreboardService {
 
     private void load() {
         List<ScoreboardPage> pages = storage.loadAllPages();
+        if (pages == null || pages.isEmpty()) {
+            FancyCorePlugin.get().getFancyLogger().error("No scoreboard pages loaded from storage!");
+        }
+
         for (ScoreboardPage page : pages) {
-            cache.put(page.getName(), page);
+            if (page != null && page.getName() != null) {
+                cache.put(page.getName(), page);
+            }
+        }
+
+        if (!cache.containsKey("default")) {
+            FancyCorePlugin.get().getFancyLogger().warn(
+                    "The default scoreboard page ('default') does not exist. Check your storage or create it manually."
+            );
         }
     }
 
@@ -53,6 +65,11 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     }
 
     public void attachScoreboard(FancyPlayer fancyPlayer, ScoreboardPage page) {
+        if (page == null) {
+            FancyCorePlugin.get().getFancyLogger().error("Unable to attach scoreboard: page null for player " + fancyPlayer.getPlayer().getUsername());
+            return;
+        }
+
         if (!fancyPlayer.isOnline()) {
             if (playerScoreboards.containsKey(fancyPlayer)) {
                 playerScoreboards.remove(fancyPlayer);
