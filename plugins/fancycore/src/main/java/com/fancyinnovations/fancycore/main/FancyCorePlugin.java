@@ -215,11 +215,19 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         punishmentStorage = new PunishmentJsonStorage();
         punishmentService = new PunishmentServiceImpl();
 
-        currencyStorage = new CurrencyJsonStorage();
-        currencyService = new CurrencyServiceImpl();
+        if (!fancyCoreConfig.disableEconomySystem()) {
+            currencyStorage = new CurrencyJsonStorage();
+            currencyService = new CurrencyServiceImpl();
+        } else {
+            fancyLogger.info("Disabled FancyCore's built-in economy system. This might cause issues with other features/plugins depending on it.");
+        }
 
-        permissionStorage = new PermissionJsonStorage();
-        permissionService = new PermissionServiceImpl(permissionStorage);
+        if (!fancyCoreConfig.disablePermissionSystem()) {
+            permissionStorage = new PermissionJsonStorage();
+            permissionService = new PermissionServiceImpl(permissionStorage);
+        } else {
+            fancyLogger.info("Disabled FancyCore's built-in permission system. This might cause issues with other features/plugins depending on it.");
+        }
 
         chatStorage = new ChatJsonStorage();
         chatService = new ChatServiceImpl();
@@ -232,7 +240,6 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
 
         kitsStorage = new KitsJsonStorage();
         kitsService = new KitsServiceImpl(kitsStorage);
-
         backpacksStorage = new BackpacksJsonStorage();
         backpacksService = new BackpacksServiceImpl(backpacksStorage);
 
@@ -279,7 +286,7 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         registerListeners();
 
         // register permission provider
-        if (!fancyCoreConfig.disablePermissionProvider()) {
+        if (!fancyCoreConfig.disablePermissionSystem()) {
             for (PermissionProvider permissionProvider : new ArrayList<>(PermissionsModule.get().getProviders())) {
                 PermissionsModule.get().removeProvider(permissionProvider);
             }
@@ -393,9 +400,11 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new PingCMD());
 
         // permission
-        CommandManager.get().register(new PermissionsCMD());
-        CommandManager.get().register(new GroupCMD());
-        CommandManager.get().register(new OpCMD());
+        if (!fancyCoreConfig.disablePermissionSystem()) {
+            CommandManager.get().register(new PermissionsCMD());
+            CommandManager.get().register(new GroupCMD());
+            CommandManager.get().register(new OpCMD());
+        }
 
         // kits
         CommandManager.get().register(new CreateKitCMD());
@@ -414,13 +423,15 @@ public class FancyCorePlugin extends JavaPlugin implements FancyCore {
         CommandManager.get().register(new ListBackpacksCMD());
 
         // economy
-        CommandManager.get().register(new CurrencyCMD());
-        CommandManager.get().register(new BalanceCMD());
-        CommandManager.get().register(new PayCMD());
-        CommandManager.get().register(new AddMoneyCMD());
-        CommandManager.get().register(new RemoveMoneyCMD());
-        CommandManager.get().register(new SetMoneyCMD());
-        CommandManager.get().register(new BalanceTopCMD());
+        if (!fancyCoreConfig.disableEconomySystem()) {
+            CommandManager.get().register(new CurrencyCMD());
+            CommandManager.get().register(new BalanceCMD());
+            CommandManager.get().register(new PayCMD());
+            CommandManager.get().register(new AddMoneyCMD());
+            CommandManager.get().register(new RemoveMoneyCMD());
+            CommandManager.get().register(new SetMoneyCMD());
+            CommandManager.get().register(new BalanceTopCMD());
+        }
 
         // moderation
         CommandManager.get().register(new ReportCMD());

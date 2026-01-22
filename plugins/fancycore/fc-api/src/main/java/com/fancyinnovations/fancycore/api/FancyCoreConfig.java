@@ -40,7 +40,9 @@ public interface FancyCoreConfig {
 
     // Experimental features
 
-    boolean disablePermissionProvider();
+    boolean disablePermissionSystem();
+
+    boolean disableEconomySystem();
 
     void reload();
 

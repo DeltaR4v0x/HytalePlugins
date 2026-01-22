@@ -33,7 +33,8 @@ public class PluginMetrics {
     public void register() {
         this.metrics.add(new MetricSupplier<String>("fancycore_version", this::pluginVersion));
         this.metrics.add(new MetricSupplier<String>("server_version", this::serverVersion));
-        this.metrics.add(new MetricSupplier<String>("disabled_permission_provider", this::disabledPermissionProvider));
+        this.metrics.add(new MetricSupplier<String>("disabled_permission_system", this::disabledPermissionSystem));
+        this.metrics.add(new MetricSupplier<String>("disabled_economy_system", this::disabledEconomySystem));
 
         this.metrics.add(new MetricSupplier<Double>("online_players", this::onlinePlayers));
         this.metrics.add(new MetricSupplier<String>("server_size_category", this::serverSizeCategory));
@@ -94,8 +95,12 @@ public class PluginMetrics {
         return FancyCorePlugin.get().getManifest().getVersion().toString();
     }
 
-    private String disabledPermissionProvider() {
-        return String.valueOf(FancyCorePlugin.get().getConfig().disablePermissionProvider());
+    private String disabledPermissionSystem() {
+        return String.valueOf(FancyCorePlugin.get().getConfig().disablePermissionSystem());
+    }
+
+    private String disabledEconomySystem() {
+        return String.valueOf(FancyCorePlugin.get().getConfig().disableEconomySystem());
     }
 
     private double totalAmountPunishments() {

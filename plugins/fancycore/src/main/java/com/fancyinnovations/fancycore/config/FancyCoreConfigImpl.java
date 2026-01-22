@@ -25,7 +25,9 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
     public static final String SCOREBOARD_REFRESH_INTERVAL_PATH = "settings.scoreboard.refresh_interval";
     public static final String DISABLE_ANALYTICS_PATH = "settings.disable_analytics";
 
-    public static final String DISABLE_PERMISSION_PROVIDER_PATH = "experimental_features.disable_permission_provider";
+    public static final String DISABLE_PERMISSION_PROVIDER_PATH = "experimental_features.disable_permission_provider"; // TODO remove in future versions (replaced by DISABLE_PERMISSION_SYSTEM_PATH)
+    public static final String DISABLE_PERMISSION_SYSTEM_PATH = "experimental_features.disable_permission_system";
+    public static final String DISABLE_ECONOMY_SYSTEM_PATH = "experimental_features.disable_economy_system";
 
     private static final String CONFIG_FILE_PATH = FancyCorePaths.CONFIG_FILE;
     private ConfigJSON config;
@@ -214,8 +216,19 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
 
         config.addField(
                 new ConfigField<>(
-                        DISABLE_PERMISSION_PROVIDER_PATH,
-                        "If true, FancyCore will not register its built-in permission provider.",
+                        DISABLE_PERMISSION_SYSTEM_PATH,
+                        "If true, FancyCore's permission system will be disabled.",
+                        false,
+                        false,
+                        false,
+                        Boolean.class
+                )
+        );
+
+        config.addField(
+                new ConfigField<>(
+                        DISABLE_ECONOMY_SYSTEM_PATH,
+                        "If true, FancyCore's economy system will be disabled.",
                         false,
                         false,
                         false,
@@ -317,7 +330,12 @@ public class FancyCoreConfigImpl implements FancyCoreConfig {
     }
 
     @Override
-    public boolean disablePermissionProvider() {
-        return config.get(DISABLE_PERMISSION_PROVIDER_PATH);
+    public boolean disablePermissionSystem() {
+        return (boolean) config.get(DISABLE_PERMISSION_PROVIDER_PATH) || (boolean) config.get(DISABLE_PERMISSION_SYSTEM_PATH);
+    }
+
+    @Override
+    public boolean disableEconomySystem() {
+        return config.get(DISABLE_ECONOMY_SYSTEM_PATH);
     }
 }
